@@ -12,7 +12,8 @@ __pycache__/
 !.env.example
 
 # Data (raw is re-fetchable, processed is committed)
-backend/data/raw/
+backend/data/raw/*
+!backend/data/raw/MANIFEST.md
 
 # Node / Next
 node_modules/
