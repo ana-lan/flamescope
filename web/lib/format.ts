@@ -107,3 +107,14 @@ export function fmtRange(
   if (a == null || b == null) return "n/a";
   return a === b ? fmt(a) : `${fmt(a)} to ${fmt(b)}`;
 }
+
+export const HABITAT_SHORT: Record<HabitatSlug, string> = {
+  iss: "ISS",
+  gateway: "Gateway",
+  lunar: "Lunar / Mars",
+  apollo1: "Apollo 1",
+};
+
+export function fmtSeconds(s: number | null | undefined): string {
+  return s == null ? "n/a" : `${s.toFixed(1)} s`;
+}
