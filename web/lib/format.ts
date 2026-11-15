@@ -75,3 +75,35 @@ export function insightValue(value: number | string | null, unit: string | null)
     }
     return { big: fmtNumber(value), caption: u || null };
 }
+
+// Order for the outcome strip: most dangerous at the top.
+export const OUTCOME_ORDER = [
+  "flow_terminated",
+  "completion",
+  "disruption",
+  "self_extinguished",
+  "extinction",
+  "no_ignition",
+] as const;
+
+const OUTCOME_COLOR: Record<string, string> = {
+  flow_terminated: "var(--primary)", // still burning: the danger color
+  completion: "var(--chart-5)",
+  disruption: "var(--chart-4)",
+  self_extinguished: "var(--chart-3)",
+  extinction: "var(--chart-2)",
+  no_ignition: "var(--muted-foreground)",
+};
+
+export function outcomeColor(outcome: string | null): string {
+  return (outcome && OUTCOME_COLOR[outcome]) || "var(--muted-foreground)";
+}
+
+export function fmtRange(
+  a: number | null | undefined,
+  b: number | null | undefined,
+  fmt: (v: number) => string,
+): string {
+  if (a == null || b == null) return "n/a";
+  return a === b ? fmt(a) : `${fmt(a)} to ${fmt(b)}`;
+}

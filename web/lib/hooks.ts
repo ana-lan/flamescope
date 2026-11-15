@@ -15,7 +15,8 @@ export const useCoverage = (habitat: HabitatSlug | null) =>
 
 export const useFacets = () => useSWR("facets", () => api.facets());
 
-export const useTests = (q: TestsQuery) => useSWR(["tests", JSON.stringify(q)], () => api.tests(q));
+export const useTests = (q: TestsQuery | null) =>
+  useSWR(q ? ["tests", JSON.stringify(q)] : null, () => api.tests(q as TestsQuery), { keepPreviousData: true });
 
 export const useInvestigations = () => useSWR("investigations", () => api.investigations());
 

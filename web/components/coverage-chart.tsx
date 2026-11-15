@@ -60,6 +60,7 @@ export function CoverageChart({ coverage }: { coverage: Coverage }) {
             type="number"
             dataKey="y"
             domain={[10, yMax]}
+            ticks={yTicks}
             unit="%"
             tick={AXIS}
             stroke="var(--border)"
