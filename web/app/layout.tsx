@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Providers } from "@/components/providers";
+import { BackendStatus } from "@/components/backend-status";
 
 const sans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const mono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -29,13 +30,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${sans.variable} ${mono.variable} flex min-h-dvh flex-col bg-background font-sans antialiased`}
       >
-        <TooltipProvider>
+        <Providers>
           <SiteHeader />
+          <BackendStatus />
           <main className="bg-grid flex-1">
             <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12">{children}</div>
           </main>
           <SiteFooter />
-        </TooltipProvider>
+        </Providers>
       </body>
     </html>
   );
