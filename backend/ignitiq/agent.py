@@ -405,7 +405,23 @@ def _norm_answer(s: str) -> str:
     s = _BRACKET.sub(lambda m: "[" + m.group(1).translate(_DASHES) + "]", s)
     s = s.translate(_HYPHENS)
     s = _PAREN_IDS.sub(lambda m: "[" + m.group(1) + "]", s)
-    return re.sub(r"\s*\u2014\s*", ", ", s)
+    s = re.sub(r"\s*\u2014\s*", ", ", s)
+    return _merge_trailing_cites(s)
+
+
+_TRAILING_CITES = re.compile(r"\n\s*\n\s*((?:\[[^\]\n]+\]\s*)+)$")
+
+
+def _merge_trailing_cites(s: str) -> str:
+    """A last paragraph that is only citations joins the paragraph before it; ids already
+    cited earlier are dropped, so the UI never shows a lone chip on its own line."""
+    s = s.rstrip()
+    m = _TRAILING_CITES.search(s)
+    if not m:
+        return s
+    body = s[:m.start()].rstrip()
+    extra = [c for c in re.findall(r"\[[^\]\n]+\]", m.group(1)) if c not in body]
+    return body + (" " + " ".join(extra) if extra else "")
 
 
 # ---------------------------------------------------------------- citations

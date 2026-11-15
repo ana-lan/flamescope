@@ -391,6 +391,7 @@ Rules:
 - When rows come from specific experiments, include experiment in the SELECT (and GROUP BY it) so every result can be cited to its investigation.
 - diluent is the suppressant gas ({', '.join(repr(d) for d in diluents)}). Compare suppressants with GROUP BY diluent, never with the *_frac keys.
 - extra keys are JSON fields, not columns: extra->>'key' for text, (extra->>'key')::DOUBLE for numbers.
+- MIN()/MAX() of different columns come from different tests. For the conditions of one extreme test (e.g. the lowest O2 that burned, and its pressure), use ORDER BY that column LIMIT 1.
 - experiment names are exact and case-sensitive.
 
 Experiments (psi_id) and their JSON fields in extra (read as extra->>'name', never as columns):
