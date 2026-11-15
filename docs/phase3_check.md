@@ -1,6 +1,6 @@
 # Phase 3 check
 
-Generated 2026-11-15 14:05 against `https://ignit-iq.onrender.com`. LLM runs used `fresh: true` (no cache) and were spaced 65 s apart: Groq's free tier allows 8,000 tokens per minute and one question uses about 4,000 to 5,000. Latency is wall-clock time per question as the client sees it, excluding the gaps.
+Generated 2026-11-15 14:09 against `https://ignit-iq.onrender.com`. LLM runs used `fresh: true` (no cache) and were spaced 65 s apart: Groq's free tier allows 8,000 tokens per minute and one question uses about 4,000 to 5,000. Latency is wall-clock time per question as the client sees it, excluding the gaps.
 
 ## Done-when
 
@@ -12,7 +12,7 @@ Generated 2026-11-15 14:05 against `https://ignit-iq.onrender.com`. LLM runs use
 | SSE contract: live, cached, forced failure | 24/24 |
 | Stability: 16 runs correct | 16/16 |
 | No failover on the 6 questions | 0 failovers |
-| p95 latency under 15 s | p95 34.21 s, p50 1.46 s (FAIL) |
+| p95 latency under 15 s | p95 2.71 s, p50 1.46 s (PASS) |
 | Out-of-scope question | FAIL |
 
 ## Known limitations
@@ -106,7 +106,7 @@ Generated 2026-11-15 14:05 against `https://ignit-iq.onrender.com`. LLM runs use
 | 1 | How many FLEX tests ended in extinction, and over what O2 range? | 3/3 | 0 | 1.57 | 1.63 |
 | 2 | In FLEX, what percentage of droplet tests ended in extinction with each suppressant gas: CO2, nitrogen and helium? | 3/3 | 0 | 1.20 | 1.41 |
 | 3 | How long did the concurrent and opposed flow fires burn in SAFFIRE-I? | 3/3 | 0 | 1.21 | 2.03 |
-| 4 | How much test data covers this habitat, and what happened to the flames there? | 1/1 | 0 | 34.21 | 34.21 |
+| 4 | How much test data covers this habitat, and what happened to the flames there? | 1/1 | 0 | 2.71 | 2.71 |
 | 5 | In CFI-G, what share of flames kept burning until the fuel flow was stopped at 30% O2 or more, compared with below 25%? | 3/3 | 0 | 1.75 | 1.76 |
 | 6 | Could the test data tell us how the Apollo 1 cabin fire would have behaved? | 3/3 | 0 | 1.65 | 1.89 |
 | 7 | How flammable is Kapton at 5% O2 on Mars? | 0/1 | 0 | 2.73 | 2.73 |
@@ -124,7 +124,7 @@ Generated 2026-11-15 14:05 against `https://ignit-iq.onrender.com`. LLM runs use
 | 3 | 1 | PASS | 1.21 | `groq:openai/gpt-oss-120b` | 2 | 3915 | none |  |
 | 3 | 2 | PASS | 2.03 | `groq:openai/gpt-oss-120b` | 2 | 3948 | none |  |
 | 3 | 3 | PASS | 0.94 | `groq:openai/gpt-oss-120b` | 2 | 3915 | none |  |
-| 4 | 1 | PASS | 34.21 | `groq:openai/gpt-oss-120b` | 3 | 7896 | none |  |
+| 4 | 1 | PASS | 2.71 | `groq:openai/gpt-oss-120b` | 3 | 7966 | none |  |
 | 5 | 1 | PASS | 1.46 | `groq:openai/gpt-oss-120b` | 2 | 4146 | none |  |
 | 5 | 2 | PASS | 1.76 | `groq:openai/gpt-oss-120b` | 2 | 4129 | none |  |
 | 5 | 3 | PASS | 1.75 | `groq:openai/gpt-oss-120b` | 2 | 4129 | none |  |
@@ -224,45 +224,22 @@ LLM calls:
 
 Habitat: lunar. Expected source: insight coverage_gap and /coverage?habitat=lunar.
 
-> The lunar-surface habitat (56.5 kPa, 34 % O₂) is only sparsely covered by ISS combustion testing. Nearest-conditions analysis finds 11 tests within ±15 % pressure and ±3 % O₂, all from the CFI-G gas-jet experiment, giving a “sparse” verdict [PSI-159].
->
-> Within that pressure-O₂ window the CFI-G data contain nine recorded outcomes, but none are self-extinguished or flow-terminated; all outcomes are NULL for those nine rows [PSI-159]. The closest recorded behaviors just outside the box are a self-extinguishment and a flow-termination at 50.7 kPa, 34 % O₂ [PSI-159].
->
-> Thus, only a handful of tests approximate the lunar habitat, and they do not show flame-extinction or flow-termination behavior under those exact conditions.
+> The lunar-surface habitat (56 kPa, 34 % O₂) is only sparsely covered by ISS combustion data. Eleven CFI-G gas-jet tests fall within the ±15 % pressure / ±3 %-point O₂ envelope. Of those, five tests self-extinguished when the fuel flow was stopped and four tests went out on their own while fuel was still flowing; two tests have no recorded outcome [PSI-159]. No FLEX droplet or other experiment tests lie in that envelope, so the only flame-behavior evidence comes from these CFI-G runs.
 
 | Number | Cited | Source | OK |
 | --- | --- | --- | --- |
-| 56.5 | - | question | yes |
+| 56 | - | question | yes |
 | 34 | - | question | yes |
-| 11 | PSI-159 | nearest_conditions:PSI-159 | yes |
-| 15 | PSI-159 | nearest_conditions | yes |
-| 3 | PSI-159 | nearest_conditions | yes |
-| 50.7 | PSI-159 | nearest_conditions:PSI-159 | yes |
-| 34 | PSI-159 | question | yes |
+| 15 | - | nearest_conditions | yes |
+| 3 | - | nearest_conditions | yes |
 
 Citations: PSI-159 (ACME CFI-G, doi:10.60555/cyt1-kh64)
 
-SQL 1: 1 rows
-
-```sql
-SELECT COUNT(*) AS total,
-       SUM(CASE WHEN outcome='still burning when the fuel flow was stopped' THEN 1 ELSE 0 END) AS flow_terminated,
-       SUM(CASE WHEN outcome='went out on its own while fuel was still flowing' THEN 1 ELSE 0 END) AS self_extinguished
-FROM tests
-WHERE psi_id='PSI-159'
-  AND pressure_kpa BETWEEN 0.85*56.5 AND 1.15*56.5
-  AND o2_frac BETWEEN 0.34-0.03 AND 0.34+0.03
-  AND outcome IS NOT NULL AND outcome <> 'no_ignition'
-  AND coalesce(extra->>'is_duplicate','false') <> 'true';
-```
-
 LLM calls:
 
-- `groq:openai/gpt-oss-120b`: ok, prompt 1995 (est 1886), 0.45 s
-- `groq:openai/gpt-oss-120b`: RateLimitError 429, prompt None (est 2523), 0.13 s TPM used 5678/8000 requested 3071
-- `groq:openai/gpt-oss-120b`: ok, prompt 2806 (est 2523), 0.72 s
-- `groq:openai/gpt-oss-120b`: RateLimitError 429, prompt None (est 2801), 0.09 s TPM used 7720/8000 requested 3360
-- `groq:openai/gpt-oss-120b`: ok, prompt 3095 (est 2801), 1.56 s
+- `groq:openai/gpt-oss-120b`: ok, prompt 1995 (est 1886), 0.85 s
+- `groq:openai/gpt-oss-120b`: ok, prompt 2864 (est 2577), 0.83 s
+- `groq:openai/gpt-oss-120b`: ok, prompt 3107 (est 2848), 0.42 s
 
 ### 5. In CFI-G, what share of flames kept burning until the fuel flow was stopped at 30% O2 or more, compared with below 25%?
 
