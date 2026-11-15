@@ -6,10 +6,12 @@ import type { HabitatSlug, TestsQuery } from "@/lib/types";
 export const useHabitats = () => useSWR("habitats", () => api.habitats());
 
 export const useInsights = (habitat: HabitatSlug | null) =>
-  useSWR(["insights", habitat], () => api.insights(habitat));
+  useSWR(["insights", habitat], () => api.insights(habitat), { keepPreviousData: true });
 
 export const useCoverage = (habitat: HabitatSlug | null) =>
-  useSWR(habitat ? ["coverage", habitat] : null, () => api.coverage(habitat as HabitatSlug));
+  useSWR(habitat ? ["coverage", habitat] : null, () => api.coverage(habitat as HabitatSlug), {
+    keepPreviousData: true,
+  });
 
 export const useFacets = () => useSWR("facets", () => api.facets());
 
