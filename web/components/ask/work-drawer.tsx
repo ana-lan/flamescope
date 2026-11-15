@@ -45,7 +45,7 @@ function Body({ f }: { f: AskFinal }) {
   const tokens = (f.usage.prompt_tokens ?? 0) + (f.usage.completion_tokens ?? 0);
   return (
     <div className="space-y-8 px-4 pb-10">
-      <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <Meta label="Answer" value={f.cached ? "Recorded" : "Live"} />
         <Meta label="Model" value={f.model?.split(":").slice(1).join(":") || "n/a"} />
         <Meta label="LLM calls" value={String(f.llm_calls)} />
@@ -211,7 +211,7 @@ function Meta({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
       <dt className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</dt>
-      <dd className="num truncate text-sm" title={value}>
+      <dd className="num break-words text-sm">
         {value}
       </dd>
     </div>

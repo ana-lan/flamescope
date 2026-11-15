@@ -107,6 +107,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* rings for keyboard users only, not after a mouse click */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
 
 /* numbers: mono + aligned digits */

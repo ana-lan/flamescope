@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorNote } from "@/components/error-note";
 import { activeCount, EMPTY_FILTERS, FilterPanel, toQuery, type Filters } from "@/components/explorer/filters";
 import { OutcomeStrip } from "@/components/explorer/outcome-strip";
-import { TestsTable } from "@/components/explorer/tests-table";
+import { isLogOnly, TestsTable } from "@/components/explorer/tests-table";
 import { InvestigationPanel } from "@/components/explorer/investigation-panel";
 import { useFacets, useTests } from "@/lib/hooks";
 import { useDebounced } from "@/lib/use-debounced";
@@ -129,7 +129,13 @@ export function Explorer() {
               ) : total === 0 ? (
                 <p className="py-10 text-center text-sm text-muted-foreground">No tests match these filters.</p>
               ) : (
-                <div className={cn("transition-opacity", table.isValidating && "opacity-60")}>
+                <div className={cn("space-y-3 transition-opacity", table.isValidating && "opacity-60")}>
+                  {table.data.rows.every(isLogOnly) && (
+                    <p className="rounded-lg border bg-secondary/40 px-3 py-2 text-xs text-muted-foreground">
+                      These rows come from a test log: the PSI table records dates, samples and materials, not
+                      measurements. The results are in each investigation&apos;s publications. Click a row to see them.
+                    </p>
+                  )}
                   <TestsTable rows={table.data.rows} onOpen={setOpenPsi} />
                 </div>
               )}

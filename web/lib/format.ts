@@ -70,7 +70,7 @@ export function insightValue(value: number | string | null, unit: string | null)
     }
     if (u === "%") return { big: `${fmtNumber(value)}%`, caption: null };
     if (/share|fraction|frac/i.test(u) && value >= 0 && value <= 1) {
-      const pct = (value * 100).toLocaleString("en-US", { maximumFractionDigits: 1 });
+      const pct = (value * 100).toLocaleString("en-US", { maximumFractionDigits: 0 });
       return { big: `${pct}%`, caption: u.replace(/\s*fraction\s*/i, " ").trim() || null };
     }
     return { big: fmtNumber(value), caption: u || null };
