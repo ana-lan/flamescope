@@ -24,4 +24,4 @@ web/out/
 # OS / editors
 .DS_Store
 .vscode/
-.idea/
+.idea/*.duckdb.tmp
