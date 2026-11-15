@@ -1,6 +1,6 @@
 # Phase 3 check
 
-Generated 2026-11-15 01:24 against `http://localhost:8000`. LLM runs used `fresh: true` (no cache) and were spaced 65 s apart: Groq's free tier allows 8,000 tokens per minute and one question uses about 4,000 to 5,000. Latency is wall-clock time per question as the client sees it, excluding the gaps.
+Generated 2026-11-15 12:23 against `http://localhost:8000`. LLM runs used `fresh: true` (no cache) and were spaced 65 s apart: Groq's free tier allows 8,000 tokens per minute and one question uses about 4,000 to 5,000. Latency is wall-clock time per question as the client sees it, excluding the gaps.
 
 ## Done-when
 

@@ -21,6 +21,7 @@ import numpy as np
 import pandas as pd
 
 from ignitiq.db import connect
+from ignitiq.schema import OUTCOME_MEANINGS
 
 P_TOL = 0.15        # ±15% of the target pressure = 1 unit
 O2_TOL = 0.03       # ±3 percentage points of O2 = 1 unit
@@ -64,6 +65,11 @@ def _clean(v):
 
 def _records(df: pd.DataFrame) -> list[dict]:
     return [{k: _clean(v) for k, v in rec.items()} for rec in df.to_dict("records")]
+
+
+def _meanings(codes: pd.Series) -> dict:
+    """Outcome code -> plain-English meaning, for every code present."""
+    return {c: OUTCOME_MEANINGS.get(c, c) for c in sorted(codes.dropna().unique())}
 
 
 @functools.lru_cache(maxsize=1)
@@ -145,6 +151,9 @@ def nearest(pressure_kpa: float, o2_frac: float, per_experiment: int = 3,
                 "o2_frac": [_clean(g["o2_frac"].min()), _clean(g["o2_frac"].max())],
             },
             "outcomes_in_box": {k: int(v) for k, v in box["outcome"].value_counts().items()},
+            "outcome_meanings": _meanings(pd.concat([box["outcome"],
+                                                     g.head(per_experiment)["outcome"]])),
+            "nearest": _records(g.head(per_experiment)[ROW_COLS]),
             "nearest": _records(g.head(per_experiment)[ROW_COLS]),
         })
     experiments.sort(key=lambda e: e["nearest_distance"])
@@ -160,9 +169,13 @@ def nearest(pressure_kpa: float, o2_frac: float, per_experiment: int = 3,
     else:
         verdict = "untested"
 
-    note = (f"{n_box} tests within ±{P_TOL:.0%} pressure and ±{O2_TOL * 100:.0f} pts O2 "
-            f"across {sum(e['n_in_box'] > 0 for e in experiments)} experiments; "
-            f"nearest test at distance {best:.2f}.")
+    n_exp = sum(e["n_in_box"] > 0 for e in experiments)
+    tol = f"within ±{P_TOL:.0%} pressure and ±{O2_TOL * 100:.0f} pts O2"
+    if n_box:
+        note = (f"{n_box} test{'s' if n_box != 1 else ''} {tol} across {n_exp} "
+                f"experiment{'s' if n_exp != 1 else ''}; nearest test at distance {best:.2f}.")
+    else:
+        note = f"No tests {tol}; nearest test at distance {best:.2f}."
     if verdict == "untested":
         note += f" No test within {FAR:.0f} box widths: any answer here is an extrapolation."
 

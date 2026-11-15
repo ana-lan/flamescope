@@ -219,6 +219,18 @@ _OUTCOMES = {
 }
 
 
+# Plain-English meaning of each outcome code. Tool results send these next to
+# the codes so the model never has to guess (e.g. flow_terminated = still burning).
+OUTCOME_MEANINGS = {
+    "extinction": "went out before the fuel was used up",
+    "completion": "burned until the droplet was used up",
+    "disruption": "droplet broke apart while burning",
+    "self_extinguished": "went out on its own while fuel was still flowing",
+    "flow_terminated": "still burning when the fuel flow was stopped",
+    "no_ignition": "did not ignite",
+}
+
+
 def outcome(v: Any) -> str | None:
     """Map a raw outcome to the shared vocabulary; unknown values -> None."""
     s = clean(v)
