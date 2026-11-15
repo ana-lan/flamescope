@@ -216,6 +216,11 @@ dependencies = [
     { name = "uvicorn", extra = ["standard"] },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pyyaml" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.15.0" },
@@ -235,6 +240,9 @@ requires-dist = [
     { name = "tenacity", specifier = ">=9.2.1" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pyyaml", specifier = ">=6.0.3" }]
 
 [[package]]
 name = "flatbuffers"

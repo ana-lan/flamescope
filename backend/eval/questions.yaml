@@ -1,0 +1,140 @@
+# IgnitIQ eval set: 15 questions scored against the live API by eval/run_eval.py.
+# Expected numbers are computed at run time from truth_sql or truth_nearest, never typed in.
+#
+# Keys
+#   question, habitat (iss | gateway | lunar | apollo1 | omit), type (label for the report)
+#   truth_sql        first row = expected numbers; with truth_kind: text, every row's first column
+#                    is a name the answer must mention
+#   truth_nearest    habitat slug: expected number = tests in that habitat's box
+#   cites            every id must be a verified citation
+#   cites_any        at least one of these ids must be a verified citation
+#   min_citations    at least this many verified citations
+#   must_include     each item must appear (an item can be a list of alternatives)
+#   must_not_include none of these may appear
+#   mentions_any     at least one must appear; the token not_covered expands to the "not covered" phrases
+#   sql_contains     each must appear in the SQL the agent ran
+#   grounding        require grounding.ok (default true)
+
+- id: 1
+  type: count
+  question: How many FLEX droplet tests ended in extinction, and what were the lowest and highest ambient O2 levels in those tests?
+  truth_sql: |
+    select count(*), min(o2_frac), max(o2_frac)
+    from tests where experiment = 'FLEX' and outcome = 'extinction'
+  cites: [PSI-69]
+
+- id: 2
+  type: share
+  question: In CFI-G, what share of flames kept burning until the fuel flow was stopped at 30% O2 or more, compared with below 25% O2?
+  truth_sql: |
+    select 100.0 * count(*) filter (where o2_frac >= 0.30 and outcome = 'flow_terminated')
+                 / count(*) filter (where o2_frac >= 0.30),
+           100.0 * count(*) filter (where o2_frac < 0.25 and outcome = 'flow_terminated')
+                 / count(*) filter (where o2_frac < 0.25)
+    from tests
+    where experiment = 'CFI-G' and outcome is not null and outcome <> 'no_ignition'
+  cites: [PSI-159]
+  sql_contains: [flow_terminated]
+  must_not_include: [tend to die out, tended to die out]
+
+- id: 3
+  type: share
+  question: Which suppressant gas put out FLEX droplet flames most often, comparing CO2, nitrogen and helium as the diluent?
+  truth_sql: |
+    select 100.0 * count(*) filter (where diluent = 'CO2' and outcome = 'extinction') / count(*) filter (where diluent = 'CO2'),
+           100.0 * count(*) filter (where diluent = 'N2'  and outcome = 'extinction') / count(*) filter (where diluent = 'N2'),
+           100.0 * count(*) filter (where diluent = 'He'  and outcome = 'extinction') / count(*) filter (where diluent = 'He')
+    from tests
+    where experiment = 'FLEX' and outcome is not null and outcome <> 'no_ignition'
+  cites: [PSI-69]
+  must_include: [[CO2, carbon dioxide]]
+
+- id: 4
+  type: duration
+  question: In SAFFIRE-I, how long did the fire burn with concurrent flow compared with opposed flow?
+  truth_sql: |
+    select max(burn_time_s) filter (where extra->>'flow_direction' = 'concurrent'),
+           max(burn_time_s) filter (where extra->>'flow_direction' = 'opposed')
+    from tests where experiment = 'SAFFIRE-I'
+  cites: [PSI-98]
+
+- id: 5
+  type: minimum
+  question: What is the lowest ambient oxygen level at which a heptane droplet burned completely in FLEX, and at what pressure?
+  truth_sql: |
+    select o2_frac, pressure_kpa
+    from tests
+    where experiment = 'FLEX' and outcome = 'completion' and fuel ilike '%heptane%'
+    order by o2_frac, pressure_kpa
+    limit 1
+  cites: [PSI-69]
+
+- id: 6
+  type: list
+  question: Which fuels were burned in the FLEX droplet tests?
+  truth_kind: text
+  truth_sql: |
+    select distinct fuel from tests where experiment = 'FLEX' and fuel is not null order by 1
+  cites: [PSI-69]
+
+- id: 7
+  type: coverage
+  habitat: lunar
+  question: How much test data covers this habitat, and what happened to the flames there?
+  truth_nearest: lunar
+  cites: [PSI-159]
+  must_include: [[still burning, kept burning, continued burning, burning until, burning when]]
+  must_not_include: [tend to die out, tended to die out, stopped when the fuel flow was cut]
+  mentions_any: [sparse, limited, few, only 11]
+
+- id: 8
+  type: coverage
+  habitat: gateway
+  question: How well do the ISS combustion tests cover this habitat's atmosphere?
+  truth_nearest: gateway
+  min_citations: 1
+
+- id: 9
+  type: coverage
+  habitat: apollo1
+  question: Were any ISS combustion tests run in an atmosphere like the Apollo 1 cabin?
+  mentions_any: [not_covered]
+  min_citations: 1
+
+- id: 10
+  type: range
+  question: What range of pressures and ambient oxygen levels did the CFI-G experiment test?
+  truth_sql: |
+    select min(pressure_kpa), max(pressure_kpa), min(o2_frac), max(o2_frac)
+    from tests
+    where experiment = 'CFI-G' and o2_frac is not null and pressure_kpa is not null
+  cites: [PSI-159]
+
+- id: 11
+  type: text
+  question: What was the FLEX investigation trying to learn?
+  cites: [PSI-69]
+  must_include: [[extinction, extinguish, suppress]]
+
+- id: 12
+  type: text
+  question: What happened in the 1997 fire on the Mir space station?
+  cites_any: ["NASA:mir_1997"]
+  must_include: [[oxygen]]
+
+- id: 13
+  type: out of scope
+  question: How flammable is Kapton in microgravity according to the test data?
+  mentions_any: [not_covered]
+  must_include: [[smoke]]
+
+- id: 14
+  type: data gap
+  question: What flame spread rates did the BASS experiment measure?
+  mentions_any: [not_covered, publication, test log]
+
+- id: 15
+  type: maximum
+  question: What is the highest ambient oxygen level tested in any of the ISS combustion experiments?
+  truth_sql: |
+    select max(o2_frac) from tests

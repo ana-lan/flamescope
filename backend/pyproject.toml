@@ -20,3 +20,8 @@ dependencies = [
     "tenacity>=9.2.1",
     "uvicorn[standard]>=0.54.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyyaml>=6.0.3",
+]
