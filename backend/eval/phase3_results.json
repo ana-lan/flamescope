@@ -1516,9 +1516,9 @@
   ],
   "4": [
    {
-    "ran_at": "2026-11-15 00:56:41",
+    "ran_at": "2026-11-15 14:05:47",
     "round": 1,
-    "wall_s": 1.49,
+    "wall_s": 34.21,
     "passed": true,
     "failover": false,
     "checks": [
@@ -1566,7 +1566,7 @@
     "result": {
      "question": "How much test data covers this habitat, and what happened to the flames there?",
      "habitat": "lunar",
-     "answer": "The lunar-surface habitat (56\u202fkPa, 34\u202f%\u202fO\u2082) is only sparsely covered by ISS combustion data. Eleven CFI-G gas-jet tests fall within \u00b115\u202f% pressure and \u00b13\u202f%\u202fO\u2082 of those conditions; no FLEX droplet or other experiment lies that close[PSI-159].  \n\nAmong the 11 nearby CFI-G tests, five flames were recorded as **flow-terminated** (the burner was shut off while the flame was still burning) and four as **self-extinguished** (the flame died out on its own). The remaining two tests have no outcome recorded[PSI-159].  \n\nThus, under near-lunar pressure and oxygen fraction, the available data show that flames tend to either go out spontaneously or be quenched when the fuel flow stops, with no evidence of sustained, uncontrolled burning.",
+     "answer": "The lunar-surface habitat (56.5\u202fkPa, 34\u202f%\u202fO\u2082) is only sparsely covered by ISS combustion testing. Nearest-conditions analysis finds 11 tests within \u00b115\u202f% pressure and \u00b13\u202f%\u202fO\u2082, all from the CFI-G gas-jet experiment, giving a \u201csparse\u201d verdict\u202f[PSI-159].\n\nWithin that pressure-O\u2082 window the CFI-G data contain nine recorded outcomes, but none are self-extinguished or flow-terminated; all outcomes are NULL for those nine rows\u202f[PSI-159]. The closest recorded behaviors just outside the box are a self-extinguishment and a flow-termination at 50.7\u202fkPa, 34\u202f%\u202fO\u2082\u202f[PSI-159].\n\nThus, only a handful of tests approximate the lunar habitat, and they do not show flame-extinction or flow-termination behavior under those exact conditions.",
      "citations": [
       {
        "id": "PSI-159",
@@ -1579,7 +1579,28 @@
        "verified": true
       }
      ],
-     "sql_run": [],
+     "sql_run": [
+      {
+       "sql": "SELECT COUNT(*) AS total,\n       SUM(CASE WHEN outcome='still burning when the fuel flow was stopped' THEN 1 ELSE 0 END) AS flow_terminated,\n       SUM(CASE WHEN outcome='went out on its own while fuel was still flowing' THEN 1 ELSE 0 END) AS self_extinguished\nFROM tests\nWHERE psi_id='PSI-159'\n  AND pressure_kpa BETWEEN 0.85*56.5 AND 1.15*56.5\n  AND o2_frac BETWEEN 0.34-0.03 AND 0.34+0.03\n  AND outcome IS NOT NULL AND outcome <> 'no_ignition'\n  AND coalesce(extra->>'is_duplicate','false') <> 'true';",
+       "error": null,
+       "columns": [
+        "total",
+        "flow_terminated",
+        "self_extinguished"
+       ],
+       "rows": [
+        [
+         9,
+         0,
+         0
+        ]
+       ],
+       "row_count": 1,
+       "truncated": false,
+       "original_sql": null,
+       "auto_fixed": null
+      }
+     ],
      "passages": [],
      "steps": [
       {
@@ -1591,382 +1612,17 @@
         "per_experiment": 2
        },
        "summary": "sparse, 11 in box, nearest 0.69"
-      }
-     ],
-     "grounding": {
-      "numbers_checked": 5,
-      "numbers": [
-       {
-        "value": "56",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "34",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "15",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions",
-        "ok": true
-       },
-       {
-        "value": "3",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions",
-        "ok": true
-       },
-       {
-        "value": "11",
-        "cited": [],
-        "source": "nearest_conditions",
-        "ok": true
-       }
-      ],
-      "unverified": [],
-      "misattributed": [],
-      "ok": true
-     },
-     "answer_truncated": false,
-     "model": "groq:openai/gpt-oss-120b",
-     "models_failed": [],
-     "llm_calls": 2,
-     "usage": {
-      "prompt_tokens": 4621,
-      "completion_tokens": 294
-     },
-     "llm_trace": [
-      {
-       "model": "groq:openai/gpt-oss-120b",
-       "ok": true,
-       "prompt_tokens": 1921,
-       "completion_tokens": 61,
-       "est_prompt_tokens": 1803,
-       "latency_s": 0.57,
-       "finish": "tool_calls"
       },
       {
-       "model": "groq:openai/gpt-oss-120b",
-       "ok": true,
-       "prompt_tokens": 2700,
-       "completion_tokens": 233,
-       "est_prompt_tokens": 2398,
-       "latency_s": 0.83,
-       "finish": "stop"
-      }
-     ],
-     "elapsed_s": 1.48,
-     "cached": false,
-     "cached_at": null,
-     "citations_added": []
-    }
-   },
-   {
-    "ran_at": "2026-11-15 01:04:28",
-    "round": 2,
-    "wall_s": 1.49,
-    "passed": true,
-    "failover": false,
-    "checks": [
-     {
-      "label": "mentions 11 or eleven",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "cites PSI-159 (verified)",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "says one of ['sparse']",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "has a verified citation",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "every citation verified",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "no unverified numbers",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "numbers match their citations",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "answer not cut off",
-      "ok": true,
-      "detail": ""
-     }
-    ],
-    "result": {
-     "question": "How much test data covers this habitat, and what happened to the flames there?",
-     "habitat": "lunar",
-     "answer": "The nearest ISS combustion tests to a lunar-surface habitat (56\u202fkPa, 34\u202f%\u202fO\u2082) are sparse. Eleven CFI-G gas-jet tests fall within \u00b115\u202f% pressure and \u00b13\u202fpercentage-points O\u2082; the closest test was at 50.7\u202fkPa, 34\u202f%\u202fO\u2082. In those tests the flame self-extinguished in four cases and the flow was terminated in five cases, indicating that at this pressure-O\u2082 combination the jet flames tended to die out rather than sustain a steady burn. No FLEX droplet or other experiment landed inside the habitat box, and the nearest FLEX droplet test (71\u202fkPa, 34\u202f%\u202fO\u2082) showed disruption of the droplet flame. Overall, the available data suggest a high likelihood of flame extinction or flow termination under lunar-habitat conditions, but coverage is limited. \n\n**Evidence** - CFI-G tests: 11 in-box, outcomes 5\u202fflow-terminated, 4\u202fself-extinguished; nearest test at 0.69 distance\u202f[PSI-159]. FLEX droplet nearest test at 1.73 distance showed disruption\u202f[PSI-69].",
-     "citations": [
-      {
-       "id": "PSI-159",
-       "kind": "investigation",
-       "label": "ACME CFI-G",
-       "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
-       "doi": "10.60555/cyt1-kh64",
-       "url": "https://doi.org/10.60555/cyt1-kh64",
-       "known": true,
-       "verified": true
-      },
-      {
-       "id": "PSI-69",
-       "kind": "investigation",
-       "label": "FLEX",
-       "title": "Flame Extinguishment Experiment",
-       "doi": "10.60555/mbq8-0451",
-       "url": "https://doi.org/10.60555/mbq8-0451",
-       "known": true,
-       "verified": true
-      }
-     ],
-     "sql_run": [],
-     "passages": [],
-     "steps": [
-      {
-       "tool": "nearest_conditions",
+       "tool": "query_tests",
        "args": {
-        "habitat": "lunar",
-        "o2_frac": 0.34,
-        "pressure_kpa": 56.5,
-        "per_experiment": 2
+        "sql": "SELECT COUNT(*) AS total,\n       SUM(CASE WHEN outcome='still burning when the fuel flow was stopped' THEN 1 ELSE 0 END) AS flow_terminated,\n       SUM(CASE WHEN outcome='went out on its own while fuel was still flowing' THEN 1 ELSE 0 END) AS self_extinguished\nFROM tests\nWHERE psi_id='PSI-159'\n  AND pressure_kpa BETWEEN 0.85*56.5 AND 1.15*56.5\n  AND o2_frac BETWEEN 0.34-0.03 AND 0.34+0.03\n  AND outcome IS NOT NULL AND outcome <> 'no_ignition'\n  AND coalesce(extra->>'is_duplicate','false') <> 'true';"
        },
-       "summary": "sparse, 11 in box, nearest 0.69"
+       "summary": "1 rows"
       }
      ],
      "grounding": {
-      "numbers_checked": 13,
-      "numbers": [
-       {
-        "value": "56",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "34",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "15",
-        "cited": [],
-        "source": "nearest_conditions",
-        "ok": true
-       },
-       {
-        "value": "3",
-        "cited": [],
-        "source": "nearest_conditions",
-        "ok": true
-       },
-       {
-        "value": "50.7",
-        "cited": [],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "34",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "71",
-        "cited": [],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "34",
-        "cited": [],
-        "source": "question",
-        "ok": true
-       },
-       {
-        "value": "11",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "5",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "4",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "0.69",
-        "cited": [
-         "PSI-159"
-        ],
-        "source": "nearest_conditions:PSI-159",
-        "ok": true
-       },
-       {
-        "value": "1.73",
-        "cited": [
-         "PSI-69"
-        ],
-        "source": "nearest_conditions:PSI-69",
-        "ok": true
-       }
-      ],
-      "unverified": [],
-      "misattributed": [],
-      "ok": true
-     },
-     "answer_truncated": false,
-     "model": "groq:openai/gpt-oss-120b",
-     "models_failed": [],
-     "llm_calls": 2,
-     "usage": {
-      "prompt_tokens": 4621,
-      "completion_tokens": 335
-     },
-     "llm_trace": [
-      {
-       "model": "groq:openai/gpt-oss-120b",
-       "ok": true,
-       "prompt_tokens": 1921,
-       "completion_tokens": 61,
-       "est_prompt_tokens": 1803,
-       "latency_s": 0.45,
-       "finish": "tool_calls"
-      },
-      {
-       "model": "groq:openai/gpt-oss-120b",
-       "ok": true,
-       "prompt_tokens": 2700,
-       "completion_tokens": 274,
-       "est_prompt_tokens": 2398,
-       "latency_s": 0.96,
-       "finish": "stop"
-      }
-     ],
-     "elapsed_s": 1.48,
-     "cached": false,
-     "cached_at": null,
-     "citations_added": []
-    }
-   },
-   {
-    "ran_at": "2026-11-15 01:11:07",
-    "round": 3,
-    "wall_s": 1.43,
-    "passed": true,
-    "failover": false,
-    "checks": [
-     {
-      "label": "mentions 11 or eleven",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "cites PSI-159 (verified)",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "says one of ['sparse']",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "has a verified citation",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "every citation verified",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "no unverified numbers",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "numbers match their citations",
-      "ok": true,
-      "detail": ""
-     },
-     {
-      "label": "answer not cut off",
-      "ok": true,
-      "detail": ""
-     }
-    ],
-    "result": {
-     "question": "How much test data covers this habitat, and what happened to the flames there?",
-     "habitat": "lunar",
-     "answer": "The lunar-surface habitat (56.5\u202fkPa, 34\u202f%\u202fO\u2082) is only sparsely covered by ISS combustion data. Eleven CFI-G gas-jet tests fall within \u00b115\u202f% pressure and \u00b13\u202f%\u202fO\u2082 of those conditions. In that subset five flames stopped when the fuel flow was cut off (flow-terminated) and four extinguished on their own (self-extinguished)\u202f[PSI-159]. No FLEX droplet or other experiment tests lie this close, so the only observed behavior is that flames tend to die out rather than burn continuously under the habitat\u2019s relatively low pressure and elevated O\u2082.",
-     "citations": [
-      {
-       "id": "PSI-159",
-       "kind": "investigation",
-       "label": "ACME CFI-G",
-       "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
-       "doi": "10.60555/cyt1-kh64",
-       "url": "https://doi.org/10.60555/cyt1-kh64",
-       "known": true,
-       "verified": true
-      }
-     ],
-     "sql_run": [],
-     "passages": [],
-     "steps": [
-      {
-       "tool": "nearest_conditions",
-       "args": {
-        "habitat": "lunar",
-        "o2_frac": 0.34,
-        "pressure_kpa": 56.5,
-        "per_experiment": 2
-       },
-       "summary": "sparse, 11 in box, nearest 0.69"
-      }
-     ],
-     "grounding": {
-      "numbers_checked": 4,
+      "numbers_checked": 7,
       "numbers": [
        {
         "value": "56.5",
@@ -1981,15 +1637,43 @@
         "ok": true
        },
        {
+        "value": "11",
+        "cited": [
+         "PSI-159"
+        ],
+        "source": "nearest_conditions:PSI-159",
+        "ok": true
+       },
+       {
         "value": "15",
-        "cited": [],
+        "cited": [
+         "PSI-159"
+        ],
         "source": "nearest_conditions",
         "ok": true
        },
        {
         "value": "3",
-        "cited": [],
+        "cited": [
+         "PSI-159"
+        ],
         "source": "nearest_conditions",
+        "ok": true
+       },
+       {
+        "value": "50.7",
+        "cited": [
+         "PSI-159"
+        ],
+        "source": "nearest_conditions:PSI-159",
+        "ok": true
+       },
+       {
+        "value": "34",
+        "cited": [
+         "PSI-159"
+        ],
+        "source": "question",
         "ok": true
        }
       ],
@@ -2000,35 +1684,67 @@
      "answer_truncated": false,
      "model": "groq:openai/gpt-oss-120b",
      "models_failed": [],
-     "llm_calls": 2,
+     "llm_calls": 3,
      "usage": {
-      "prompt_tokens": 4621,
-      "completion_tokens": 239
+      "prompt_tokens": 7896,
+      "completion_tokens": 551
      },
      "llm_trace": [
       {
        "model": "groq:openai/gpt-oss-120b",
        "ok": true,
-       "prompt_tokens": 1921,
-       "completion_tokens": 61,
-       "est_prompt_tokens": 1803,
-       "latency_s": 0.47,
+       "prompt_tokens": 1995,
+       "completion_tokens": 58,
+       "est_prompt_tokens": 1886,
+       "latency_s": 0.45,
        "finish": "tool_calls"
       },
       {
        "model": "groq:openai/gpt-oss-120b",
+       "ok": false,
+       "error": "RateLimitError 429",
+       "kind": "TPM",
+       "limit": 8000,
+       "used": 5678,
+       "requested": 3071,
+       "est_prompt_tokens": 2523,
+       "latency_s": 0.13
+      },
+      {
+       "model": "groq:openai/gpt-oss-120b",
        "ok": true,
-       "prompt_tokens": 2700,
-       "completion_tokens": 178,
-       "est_prompt_tokens": 2398,
-       "latency_s": 0.88,
+       "prompt_tokens": 2806,
+       "completion_tokens": 210,
+       "est_prompt_tokens": 2523,
+       "latency_s": 0.72,
+       "finish": "tool_calls"
+      },
+      {
+       "model": "groq:openai/gpt-oss-120b",
+       "ok": false,
+       "error": "RateLimitError 429",
+       "kind": "TPM",
+       "limit": 8000,
+       "used": 7720,
+       "requested": 3360,
+       "est_prompt_tokens": 2801,
+       "latency_s": 0.09
+      },
+      {
+       "model": "groq:openai/gpt-oss-120b",
+       "ok": true,
+       "prompt_tokens": 3095,
+       "completion_tokens": 283,
+       "est_prompt_tokens": 2801,
+       "latency_s": 1.56,
        "finish": "stop"
       }
      ],
-     "elapsed_s": 1.42,
+     "elapsed_s": 34.12,
      "cached": false,
      "cached_at": null,
-     "citations_added": []
+     "citations_added": [],
+     "repaired": false
     }
    }
   ],

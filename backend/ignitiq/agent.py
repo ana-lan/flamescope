@@ -334,7 +334,7 @@ def _for_model(name: str, result: dict) -> str:
                 "cite_as": f"[{e['psi_id']}]", "experiment": e["experiment"],
                 "n_in_box": e["n_in_box"], "n_tested": e["n_tested"],
                 "nearest_distance": e["nearest_distance"], "outcomes_in_box": e["outcomes_in_box"],
-                "tested_range": e["tested_range"],
+                "in_box_summary": e.get("in_box_summary"),                "tested_range": e["tested_range"],
                 "nearest": [{"fuel": row.get("fuel") or row.get("material"),
                              "pressure_kpa": row.get("pressure_kpa"), "o2_frac": row.get("o2_frac"),
                              "outcome": row.get("outcome"), "distance": row.get("distance")}

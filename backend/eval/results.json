@@ -369,19 +369,19 @@
         102.271
       ]
     },
-    "passed": false,
+    "passed": true,
     "checks": [
       {
         "cat": "numbers",
         "label": "number 0.14",
         "ok": true,
-        "detail": "answer has ['0.14', '14', '2', '71']"
+        "detail": "answer has ['0.14', '14', '2', '102']"
       },
       {
         "cat": "numbers",
         "label": "number 102.271",
-        "ok": false,
-        "detail": "answer has ['0.14', '14', '2', '71']"
+        "ok": true,
+        "detail": "answer has ['0.14', '14', '2', '102']"
       },
       {
         "cat": "citations",
@@ -393,23 +393,23 @@
         "cat": "grounding",
         "label": "grounding ok",
         "ok": true,
-        "detail": "{\"numbers_checked\": 3, \"numbers\": [{\"value\": \"0.14\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}, {\"value\": \"14\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}, {\"value\": \"71\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}], \""
+        "detail": "{\"numbers_checked\": 3, \"numbers\": [{\"value\": \"0.14\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}, {\"value\": \"14\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}, {\"value\": \"102\", \"cited\": [\"PSI-69\"], \"source\": \"sql\", \"ok\": true}], "
       }
     ],
-    "answer": "The lowest ambient oxygen fraction at which a heptane droplet achieved complete combustion in the FLEX experiment was 0.14 (14 % O₂) and it occurred at an ambient pressure of about 71 kPa. [PSI-69]",
+    "answer": "The lowest ambient oxygen fraction at which a heptane droplet burned completely in the FLEX droplet series was 0.14 (14 % O₂), and that test was run at a cabin pressure of about 102 kPa. [PSI-69]",
     "model": "groq:openai/gpt-oss-120b",
     "failover": false,
     "usage": {
-      "prompt_tokens": 4097,
-      "completion_tokens": 185
+      "prompt_tokens": 12149,
+      "completion_tokens": 391
     },
-    "elapsed_s": 1.63,
-    "at": "2026-11-15T19:55:19+00:00",
+    "elapsed_s": 25.02,
+    "at": "2026-11-15T20:04:06+00:00",
     "api": "https://ignit-iq.onrender.com",
     "response": {
       "question": "What is the lowest ambient oxygen level at which a heptane droplet burned completely in FLEX, and at what pressure?",
       "habitat": null,
-      "answer": "The lowest ambient oxygen fraction at which a heptane droplet achieved complete combustion in the FLEX experiment was 0.14 (14 % O₂) and it occurred at an ambient pressure of about 71 kPa. [PSI-69]",
+      "answer": "The lowest ambient oxygen fraction at which a heptane droplet burned completely in the FLEX droplet series was 0.14 (14 % O₂), and that test was run at a cabin pressure of about 102 kPa. [PSI-69]",
       "citations": [
         {
           "id": "PSI-69",
@@ -424,16 +424,40 @@
       ],
       "sql_run": [
         {
-          "sql": "SELECT MIN(o2_frac) AS min_o2_frac, MIN(pressure_kpa) AS min_pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND (coalesce(extra->>'is_duplicate','false') <> 'true')",
+          "sql": "SELECT MIN(o2_frac) AS min_o2_frac, MIN(pressure_kpa) FILTER (WHERE o2_frac = MIN(o2_frac)) AS pressure_at_min_o2 FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND (coalesce(extra->>'is_duplicate','false') <> 'true')",
+          "error": "BinderException: Binder Error: aggregate functions are not allowed in FILTER\n\nLINE 1: ...) AS min_o2_frac, MIN(pressure_kpa) FILTER (WHERE o2_frac = MIN(o2_frac)) AS pressure_at_min_o2 FROM tests WHERE psi_id...\n                                                                       ^^^^^^^^^^^^",
+          "columns": null,
+          "rows": [],
+          "row_count": null,
+          "truncated": null,
+          "original_sql": null,
+          "auto_fixed": null
+        },
+        {
+          "sql": "WITH comp AS (SELECT o2_frac, pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND coalesce(extra->>'is_duplicate','false')<>'true') SELECT MIN(o2_frac) AS min_o2_frac FROM comp",
           "error": null,
           "columns": [
-            "min_o2_frac",
-            "min_pressure_kpa"
+            "min_o2_frac"
           ],
           "rows": [
             [
-              0.14,
-              70.954
+              0.14
+            ]
+          ],
+          "row_count": 1,
+          "truncated": false,
+          "original_sql": null,
+          "auto_fixed": null
+        },
+        {
+          "sql": "SELECT pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND o2_frac=0.14 AND coalesce(extra->>'is_duplicate','false')<>'true' LIMIT 1",
+          "error": null,
+          "columns": [
+            "pressure_kpa"
+          ],
+          "rows": [
+            [
+              102.271
             ]
           ],
           "row_count": 1,
@@ -447,7 +471,21 @@
         {
           "tool": "query_tests",
           "args": {
-            "sql": "SELECT MIN(o2_frac) AS min_o2_frac, MIN(pressure_kpa) AS min_pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND (coalesce(extra->>'is_duplicate','false') <> 'true')"
+            "sql": "SELECT MIN(o2_frac) AS min_o2_frac, MIN(pressure_kpa) FILTER (WHERE o2_frac = MIN(o2_frac)) AS pressure_at_min_o2 FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND (coalesce(extra->>'is_duplicate','false') <> 'true')"
+          },
+          "summary": "error: BinderException: Binder Error: aggregate functions are not allowed in FILTER\n\nLINE 1: ...) AS min_o2_frac, MIN(pressure_kpa) FILTER (WHERE o2_frac = M"
+        },
+        {
+          "tool": "query_tests",
+          "args": {
+            "sql": "WITH comp AS (SELECT o2_frac, pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND coalesce(extra->>'is_duplicate','false')<>'true') SELECT MIN(o2_frac) AS min_o2_frac FROM comp"
+          },
+          "summary": "1 rows"
+        },
+        {
+          "tool": "query_tests",
+          "args": {
+            "sql": "SELECT pressure_kpa FROM tests WHERE psi_id='PSI-69' AND fuel='heptane' AND outcome='completion' AND o2_frac=0.14 AND coalesce(extra->>'is_duplicate','false')<>'true' LIMIT 1"
           },
           "summary": "1 rows"
         }
@@ -472,7 +510,7 @@
             "ok": true
           },
           {
-            "value": "71",
+            "value": "102",
             "cited": [
               "PSI-69"
             ],
@@ -487,32 +525,72 @@
       "answer_truncated": false,
       "model": "groq:openai/gpt-oss-120b",
       "models_failed": [],
-      "llm_calls": 2,
+      "llm_calls": 4,
       "usage": {
-        "prompt_tokens": 4097,
-        "completion_tokens": 185
+        "prompt_tokens": 12149,
+        "completion_tokens": 391
       },
       "llm_trace": [
         {
           "model": "groq:openai/gpt-oss-120b",
           "ok": true,
-          "prompt_tokens": 1932,
-          "completion_tokens": 127,
-          "est_prompt_tokens": 1828,
-          "latency_s": 0.61,
+          "prompt_tokens": 1976,
+          "completion_tokens": 140,
+          "est_prompt_tokens": 1875,
+          "latency_s": 1.18,
           "finish": "tool_calls"
         },
         {
           "model": "groq:openai/gpt-oss-120b",
           "ok": true,
-          "prompt_tokens": 2165,
-          "completion_tokens": 58,
-          "est_prompt_tokens": 2080,
-          "latency_s": 0.46,
+          "prompt_tokens": 3244,
+          "completion_tokens": 102,
+          "est_prompt_tokens": 3006,
+          "latency_s": 0.73,
+          "finish": "tool_calls"
+        },
+        {
+          "model": "groq:openai/gpt-oss-120b",
+          "ok": false,
+          "error": "RateLimitError 429",
+          "kind": "TPM",
+          "limit": 8000,
+          "used": 4349,
+          "requested": 3813,
+          "est_prompt_tokens": 3168,
+          "latency_s": 0.12
+        },
+        {
+          "model": "groq:openai/gpt-oss-120b",
+          "ok": true,
+          "prompt_tokens": 3383,
+          "completion_tokens": 88,
+          "est_prompt_tokens": 3168,
+          "latency_s": 0.36,
+          "finish": "tool_calls"
+        },
+        {
+          "model": "groq:openai/gpt-oss-120b",
+          "ok": false,
+          "error": "RateLimitError 429",
+          "kind": "TPM",
+          "limit": 8000,
+          "used": 6665,
+          "requested": 3686,
+          "est_prompt_tokens": 3346,
+          "latency_s": 0.03
+        },
+        {
+          "model": "groq:openai/gpt-oss-120b",
+          "ok": true,
+          "prompt_tokens": 3546,
+          "completion_tokens": 61,
+          "est_prompt_tokens": 3346,
+          "latency_s": 0.53,
           "finish": "stop"
         }
       ],
-      "elapsed_s": 1.37,
+      "elapsed_s": 24.88,
       "cached": false,
       "cached_at": null,
       "citations_added": [],

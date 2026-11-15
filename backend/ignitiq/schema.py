@@ -224,7 +224,7 @@ _OUTCOMES = {
 OUTCOME_MEANINGS = {
     "extinction": "went out before the fuel was used up",
     "completion": "burned until the droplet was used up",
-    "disruption": "droplet broke apart while burning",
+    "disruption": "broke apart while burning",
     "self_extinguished": "went out on its own while fuel was still flowing",
     "flow_terminated": "still burning when the fuel flow was stopped",
     "no_ignition": "did not ignite",

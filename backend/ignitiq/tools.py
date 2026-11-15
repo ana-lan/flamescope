@@ -339,6 +339,13 @@ def nearest_conditions(habitat: str | None = None, pressure_kpa: float | None = 
                 r["outcome"] = OUTCOME_MEANINGS.get(r["outcome"], r["outcome"])
         e["outcomes_in_box"] = {OUTCOME_MEANINGS.get(k, k): n for k, n in e["outcomes_in_box"].items()}
         e.pop("outcome_meanings", None)
+        # One finished sentence per experiment: the model copies facts better than it assembles them.
+        e["n_in_box_no_outcome"] = e["n_in_box"] - sum(e["outcomes_in_box"].values())
+        if e["n_in_box"]:
+            parts = [f"{n} {meaning}" for meaning, n in e["outcomes_in_box"].items()]
+            if e["n_in_box_no_outcome"]:
+                parts.append(f"{e['n_in_box_no_outcome']} with no recorded outcome")
+            e["in_box_summary"] = f"{e['n_in_box']} {e['experiment']} tests in the box: " + "; ".join(parts) + "."
     if habitat in HABITAT_CONTEXT:
         slug, q = HABITAT_CONTEXT[habitat]
         best = _best_context(slug, q)
