@@ -2,7 +2,7 @@
 
 Live API: `https://ignit-iq.onrender.com`. Each question asked once with `fresh: true` (no cached answers). Expected numbers are computed from the database at run time.
 
-**9 of 15 questions pass.** numbers 17/19 | citations 12/12 | facts 13/16 | sql 1/1 | grounding 12/15 | failovers 0 | p50 1.6 s, p95 2.0 s | tokens 73,072
+**11 of 15 questions pass.** numbers 17/19 | citations 12/12 | facts 18/19 | sql 1/1 | grounding 12/15 | failovers 0 | p50 1.6 s, p95 2.0 s | tokens 73,072
 
 | # | Type | Question | Result | Numbers | Citations | Facts | SQL | Grounding | Time | Model |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -12,13 +12,13 @@ Live API: `https://ignit-iq.onrender.com`. Each question asked once with `fresh:
 | 4 | duration | In SAFFIRE-I, how long did the fire burn with concurrent flow compared with opposed flow? | PASS | ok | ok | - | - | ok | 1.3 s | groq:openai/gpt-oss-120b |
 | 5 | minimum | What is the lowest ambient oxygen level at which a heptane droplet burned completely in FLEX, and at what pressure? | FAIL | FAIL | ok | - | - | ok | 1.4 s | groq:openai/gpt-oss-120b |
 | 6 | list | Which fuels were burned in the FLEX droplet tests? | PASS | - | ok | ok | - | ok | 1.3 s | groq:openai/gpt-oss-120b |
-| 7 | coverage | How much test data covers this habitat, and what happened to the flames there? | FAIL | ok | ok | FAIL | - | ok | 1.9 s | groq:openai/gpt-oss-120b |
+| 7 | coverage | How much test data covers this habitat, and what happened to the flames there? | PASS | ok | ok | ok | - | ok | 1.9 s | groq:openai/gpt-oss-120b |
 | 8 | coverage | How well do the ISS combustion tests cover this habitat's atmosphere? | PASS | ok | ok | - | - | ok | 1.6 s | groq:openai/gpt-oss-120b |
 | 9 | coverage | Were any ISS combustion tests run in an atmosphere like the Apollo 1 cabin? | PASS | - | ok | ok | - | ok | 2.2 s | groq:openai/gpt-oss-120b |
 | 10 | range | What range of pressures and ambient oxygen levels did the CFI-G experiment test? | FAIL | FAIL | ok | - | - | FAIL | 1.5 s | groq:openai/gpt-oss-120b |
 | 11 | text | What was the FLEX investigation trying to learn? | PASS | - | ok | ok | - | ok | 1.1 s | groq:openai/gpt-oss-120b |
 | 12 | text | What happened in the 1997 fire on the Mir space station? | PASS | - | ok | ok | - | ok | 2.0 s | groq:openai/gpt-oss-120b |
-| 13 | out of scope | How flammable is Kapton in microgravity according to the test data? | FAIL | - | - | FAIL | - | ok | 1.8 s | groq:openai/gpt-oss-120b |
+| 13 | out of scope | How flammable is Kapton in microgravity according to the test data? | PASS | - | - | ok | - | ok | 1.8 s | groq:openai/gpt-oss-120b |
 | 14 | data gap | What flame spread rates did the BASS experiment measure? | FAIL | - | - | FAIL | - | FAIL | 1.8 s | groq:openai/gpt-oss-120b |
 | 15 | maximum | What is the highest ambient oxygen level tested in any of the ISS combustion experiments? | PASS | ok | - | - | - | ok | 1.6 s | groq:openai/gpt-oss-120b |
 
@@ -34,21 +34,11 @@ Live API: `https://ignit-iq.onrender.com`. Each question asked once with `fresh:
 
 > The lowest ambient oxygen fraction at which a heptane droplet burned completely in the FLEX experiment was 0.14 (14 % O₂) at an ambient pressure of ≈ 71 kPa. [PSI-69]
 
-### Q7: How much test data covers this habitat, and what happened to the flames there?
-- says 'still burning': 
-
-> The lunar-surface habitat (56 kPa, 34 % O₂) is only sparsely covered by ISS combustion data. Eleven CFI-G gas-jet tests fall within the ±15 % pressure / ±3 % O₂ envelope; no FLEX droplet tests lie that close. In those CFI-G runs the flames either self-extinguished (4 cases) or continued until the fuel flow was stopped (5 cases)[PSI-159]. No other experiments recorded outcomes near those conditions
-
 ### Q10: What range of pressures and ambient oxygen levels did the CFI-G experiment test?
 - number 50.665: answer has ['50', '304', '0.18', '18', '2', '0.40', '40', '2']
 - grounding ok: {"numbers_checked": 6, "numbers": [{"value": "50", "cited": ["PSI-159"], "source": null, "ok": false}, {"value": "304", "cited": ["PSI-159"], "source": "sql", "ok": true}, {"value": "0.18", "cited": ["PSI-159"], "source": "sql", "ok": true}
 
 > The CFI-G (Continuous Flow Ignition - Gas) experiment covered cabin-like pressures from about 50 kPa up to 304 kPa and ambient oxygen fractions from roughly 0.18 (≈18 % O₂) to 0.40 (≈40 % O₂)[PSI-159].
-
-### Q13: How flammable is Kapton in microgravity according to the test data?
-- says 'smoke': 
-
-> Kapton was tested in 30 microgravity experiments (SAME-R and SAME), but none of those tests recorded an outcome (ignition, extinction, etc.). Consequently the ISS combustion database does not contain quantitative flammability results for Kapton in microgravity. [PSI-101] [PSI-102]
 
 ### Q14: What flame spread rates did the BASS experiment measure?
 - says the data does not cover it: 

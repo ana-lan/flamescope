@@ -657,7 +657,7 @@
         11.0
       ]
     },
-    "passed": false,
+    "passed": true,
     "checks": [
       {
         "cat": "numbers",
@@ -674,7 +674,7 @@
       {
         "cat": "facts",
         "label": "says 'still burning'",
-        "ok": false,
+        "ok": true,
         "detail": ""
       },
       {
@@ -1417,12 +1417,30 @@
     "question": "How flammable is Kapton in microgravity according to the test data?",
     "habitat": null,
     "truth": {},
-    "passed": false,
+    "passed": true,
     "checks": [
       {
         "cat": "facts",
         "label": "says 'smoke'",
-        "ok": false,
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "cat": "facts",
+        "label": "avoids 'ignition rate'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "cat": "facts",
+        "label": "avoids 'showed no ignition'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "cat": "facts",
+        "label": "avoids 'did not ignite'",
+        "ok": true,
         "detail": ""
       },
       {

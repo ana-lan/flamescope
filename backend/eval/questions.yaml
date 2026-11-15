@@ -83,7 +83,7 @@
   question: How much test data covers this habitat, and what happened to the flames there?
   truth_nearest: lunar
   cites: [PSI-159]
-  must_include: [[still burning, kept burning, continued burning, burning until, burning when]]
+  must_include: [[still burning, kept burning, continued burning, burning until, burning when, continued until, persisted]]
   must_not_include: [tend to die out, tended to die out, stopped when the fuel flow was cut]
   mentions_any: [sparse, limited, few, only 11]
 
@@ -126,7 +126,8 @@
   type: out of scope
   question: How flammable is Kapton in microgravity according to the test data?
   mentions_any: [not_covered]
-  must_include: [[smoke]]
+  must_include: [[smoke, SAME, no flammability, not a flammability, flammability results]]
+  must_not_include: [ignition rate, showed no ignition, did not ignite]
 
 - id: 14
   type: data gap

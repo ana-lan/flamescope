@@ -52,6 +52,7 @@ DEFAULT_CHAIN = (
 )
 
 MAX_TURNS = 6
+REPAIR_ROUNDS = 1               # one rewrite when the number check fails (eval Q3, Q10, Q14)
 MAX_OUTPUT_TOKENS = 1500        # Groq reserves requested output tokens against the per-minute limit
 TEMPERATURE = 0.1
 TOOL_RESULT_CHARS = 3500        # what the model sees per tool result
@@ -311,6 +312,8 @@ def _for_model(name: str, result: dict) -> str:
         r = {k: result[k] for k in ("columns", "rows", "row_count", "truncated")}
         if result.get("provenance"):
             r["provenance"] = result["provenance"]  # which experiments these rows came from
+        if result.get("note"):
+            r["note"] = result["note"]  # warnings: empty result, MIN/MAX from different tests
         tags = _psi_tags((result.get("sql") or "") + " "
                          + to_text({"rows": result.get("rows"), "provenance": result.get("provenance")}, 50000))
         if tags:  # the citation for these rows, so the model never has to recall a PSI id
@@ -657,6 +660,24 @@ def _new_trace() -> dict:
 
 # ---------------------------------------------------------------- the loop
 
+def _repair_prompt(g: dict) -> str:
+    """Tell the model exactly which numbers failed verification and why."""
+    lines = []
+    for n in g["numbers"]:
+        if n["ok"]:
+            continue
+        if n["source"] is None:
+            lines.append(f"- {n['value']}: not in any tool result above")
+        else:
+            lines.append(f"- {n['value']}: comes from {n['source']}, but its sentence cites "
+                         f"{', '.join(n['cited']) or 'nothing'}")
+    return ("Automatic check before your answer is shown. These numbers failed:\n" + "\n".join(lines)
+            + "\nRewrite the whole answer. Keep every number that passed. For each failed number: use the "
+              "exact value from a tool result above (rounded normally), cite the investigation it came "
+              "from, or remove it. Never estimate: if the data has no value, say the data does not "
+              "record it. Follow the same citation rules.")
+
+
 def run(question: str, habitat: str | None = None, chain: list | None = None) -> Iterator[dict]:
     """Yield events: start, status, tool_call, tool_result, answer, final."""
     t0 = time.time()
@@ -714,6 +735,26 @@ def run(question: str, habitat: str | None = None, chain: list | None = None) ->
 
     answer = _norm_answer(answer)
     answer, citations_added = _backfill_citations(answer, trace, user)
+    grounding = _grounding(answer, trace, user)
+    repaired = False
+    if not grounding["ok"] and REPAIR_ROUNDS:
+        yield {"type": "status", "stage": "thinking", "turn": MAX_TURNS + 1}
+        try:
+            messages += [{"role": "assistant", "content": answer},
+                         {"role": "user", "content": _repair_prompt(grounding)}]
+            _, _, msg = _complete(state, messages, tool_choice="none")
+            fixed = _strip_think(msg.content)
+        except Exception:  # repair is best effort: keep the checked original
+            fixed = None
+        while state.notes:
+            yield state.notes.pop(0)
+        if fixed:
+            fixed = _norm_answer(fixed)
+            fixed, added2 = _backfill_citations(fixed, trace, user)
+            g2 = _grounding(fixed, trace, user)
+            bad = lambda g: len(g["unverified"]) + len(g["misattributed"])
+            if bad(g2) < bad(grounding):
+                answer, citations_added, grounding, repaired = fixed, added2, g2, True
     yield {"type": "answer", "text": answer}
     yield {
         "type": "final",
@@ -725,7 +766,8 @@ def run(question: str, habitat: str | None = None, chain: list | None = None) ->
         "sql_run": trace["sql_run"],
         "passages": list(trace["passages"].values()),
         "steps": trace["steps"],
-        "grounding": _grounding(answer, trace, user),
+        "grounding": grounding,
+        "repaired": repaired,  # True when the answer was rewritten after a failed number check
         "answer_truncated": state.last_finish == "length",
         "model": state.last_model,
         "models_failed": state.failed,

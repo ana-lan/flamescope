@@ -29,6 +29,9 @@ from ignitiq import conditions, rag
 from ignitiq.conditions import _records
 from ignitiq.db import connect
 
+import copy
+from ignitiq.schema import OUTCOME_MEANINGS
+
 MAX_ROWS = 200
 MAX_SQL_CHARS = 8000
 QUERY_TIMEOUT_S = 10.0
@@ -197,7 +200,29 @@ def query_tests(sql: str) -> dict:
         prov = _provenance(sql)
         if prov:
             res["provenance"] = {"columns": ["experiment", "psi_id", "n"], "rows": prov}
+    notes = _result_notes(sql, res)
+    if notes:
+        res["note"] = " ".join(notes)
     return res
+
+
+_EXTREME_RE = re.compile(r"\b(min|max)\s*\(\s*([^)]+?)\s*\)", re.I)
+
+
+def _result_notes(sql: str, res: dict) -> list[str]:
+    """Plain-language warnings for two mistakes the eval caught (Q14, Q5)."""
+    if "rows" not in res:
+        return []
+    notes = []
+    if not res["rows"] or all(v is None for row in res["rows"] for v in row):
+        notes.append("No test in the data has a value for this (0 rows or only NULLs). Do not report "
+                     "any value for it; say the data does not record it.")
+    cols = {m.group(2).lower() for m in _EXTREME_RE.finditer(sql)}
+    if len(cols) >= 2:
+        notes.append("MIN/MAX of different columns are computed separately, so these values can come "
+                     "from different tests. That is right for a range. For the conditions of the single "
+                     "lowest or highest test, use ORDER BY <column> LIMIT 1.")
+    return notes
 
 
 # ---------------------------------------------------------------- other tools
@@ -303,10 +328,17 @@ def nearest_conditions(habitat: str | None = None, pressure_kpa: float | None = 
         res = conditions.nearest(float(pressure_kpa), float(o2_frac), per_experiment)
     else:
         return {"error": "give either habitat, or both pressure_kpa and o2_frac"}
+    res = copy.deepcopy(res)  # never mutate a result conditions.py might share with /coverage
     keep = ["test_id", "fuel", "material", "pressure_kpa", "o2_frac", "outcome",
             "burn_time_s", "row_kind", "distance"]
     for e in res["experiments"]:
         e["nearest"] = [{k: r[k] for k in keep} for r in e["nearest"]]
+        # The model sees what happened in words, never outcome codes (it misread flow_terminated).
+        for r in e["nearest"]:
+            if r.get("outcome"):
+                r["outcome"] = OUTCOME_MEANINGS.get(r["outcome"], r["outcome"])
+        e["outcomes_in_box"] = {OUTCOME_MEANINGS.get(k, k): n for k, n in e["outcomes_in_box"].items()}
+        e.pop("outcome_meanings", None)
     if habitat in HABITAT_CONTEXT:
         slug, q = HABITAT_CONTEXT[habitat]
         best = _best_context(slug, q)
