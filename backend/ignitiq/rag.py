@@ -1,4 +1,4 @@
-"""Retrieval layer for FlameScope.
+"""Retrieval layer for IgnitIQ.
 
 Part 1 (3.1): turn every text source into chunks with citation metadata.
 Part 2 (3.2): embed chunks, write the on-disk index, search() it.

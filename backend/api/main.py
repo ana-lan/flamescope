@@ -1,4 +1,4 @@
-"""FlameScope HTTP API.
+"""IgnitIQ HTTP API.
 
 GET endpoints for data and coverage, POST /ask for the agent (SSE or JSON).
 Response shapes are pydantic models in api/schemas.py; docs/api.md describes them.
@@ -84,7 +84,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="FlameScope API",
+    title="IgnitIQ API",
     version=VERSION,
     description="ISS combustion test data, habitat coverage and a cited fire safety agent. "
                 "Data: NASA Physical Sciences Informatics (CC0). Cite investigations by PSI id and DOI.",
@@ -305,7 +305,7 @@ def coverage(habitat: HabitatSlug, per_experiment: Annotated[int, Query(ge=1, le
 ASK_SLOTS = asyncio.Semaphore(int(os.getenv("ASK_CONCURRENCY", "2")))
 CACHE_PATH = rag.PROCESSED / "demo_cache.json"
 _CACHE: dict = {"mtime": None, "data": {}}
-BUSY = "FlameScope is answering other questions right now. Try a suggested question, or ask again in a minute."
+BUSY = "IgnitIQ is answering other questions right now. Try a suggested question, or ask again in a minute."
 ALL_FAILED = "All language models are busy or rate-limited right now. Try a suggested question, or ask again in a minute."
 
 
@@ -392,7 +392,7 @@ async def _replay(final: dict):
 
 @app.post("/ask", tags=["agent"], response_model=AskFinal)
 async def ask(req: AskRequest):
-    """Ask FlameScope. stream=true (default): SSE events start, status, tool_call, tool_result,
+    """Ask IgnitIQ. stream=true (default): SSE events start, status, tool_call, tool_result,
     token, final (or error). stream=false: one JSON object, the same as the final event."""
     cached = None if req.fresh else _cache_get(req.question, req.habitat)
 

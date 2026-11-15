@@ -1,4 +1,4 @@
-"""FlameScope agent: an LLM tool loop over the 4 tools in tools.py.
+"""IgnitIQ agent: an LLM tool loop over the 4 tools in tools.py.
 
 Provider-agnostic: any OpenAI-compatible endpoint. LLM_CHAIN (backend/.env) lists
 provider:model entries in priority order. On a rate limit the agent waits for the
@@ -76,7 +76,7 @@ CONTEXT_REFS = {
 }
 SLUG_TO_REF = {v: k for k, v in CONTEXT_REFS.items()}
 
-SYSTEM_PROMPT = """You are FlameScope, a fire safety analyst for spacecraft and habitats. You answer from NASA PSI records of ISS combustion experiments, using your tools.
+SYSTEM_PROMPT = """You are IgnitIQ, a fire safety analyst for spacecraft and habitats. You answer from NASA PSI records of ISS combustion experiments, using your tools.
 
 - Every number about tests must come from a query_tests or nearest_conditions result. Compute totals, ratios and percentages in SQL. Never estimate or do arithmetic yourself.
 - Write the one query that answers the question. Skip exploratory queries.

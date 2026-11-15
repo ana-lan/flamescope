@@ -1,4 +1,4 @@
-# FlameScope API
+# IgnitIQ API
 
 Base URL: `http://localhost:8000` locally, the Render URL in production (`NEXT_PUBLIC_API_URL`).
 Interactive docs: `/docs`. Machine-readable schema: `/openapi.json`. Version 0.3.1.
@@ -237,7 +237,7 @@ One JSON object, identical to the `final` payload.
 
   `ok: false` means unverified (no source) or misattributed (found only in a source the sentence doesn't cite). Show a small "check these numbers" note when `grounding.ok` is false.
 - **`citations[].verified: false`** means the answer cites something no tool returned. Show it as a warning chip.
-- **`citations_added`** lists citations the backend appended from tool provenance (`{"id", "sentence"}`), only where a sentence had numbers, no citation, and every number traced to exactly one investigation. It never replaces a citation the model wrote. Optionally style these chips differently ("added by FlameScope").
+- **`citations_added`** lists citations the backend appended from tool provenance (`{"id", "sentence"}`), only where a sentence had numbers, no citation, and every number traced to exactly one investigation. It never replaces a citation the model wrote. Optionally style these chips differently ("added by IgnitIQ").
 - **`llm_trace`** has one entry per model attempt. Failed attempts carry `"error": "RateLimitError 429"` plus, for rate limits, `"kind": "TPM" | "ITPM" | "OTPM"`, `"used"`, `"limit"`, `"requested"`. It's for the "how I got this" drawer and debugging. It never contains provider messages or account ids.
 - **`cached: true`** comes with `cached_at`: the answer is a replay of a checked run. Label it "recorded answer".
 

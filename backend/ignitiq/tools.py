@@ -1,4 +1,4 @@
-"""Agent tools for FlameScope (Phase 3.4).
+"""Agent tools for IgnitIQ (Phase 3.4).
 
 Four tools, their Anthropic tool schemas, and one dispatcher. No LLM calls here,
 so everything is testable from the CLI without an API key.
