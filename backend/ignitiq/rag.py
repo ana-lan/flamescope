@@ -4,9 +4,9 @@ Part 1 (3.1): turn every text source into chunks with citation metadata.
 Part 2 (3.2): embed chunks, write the on-disk index, search() it.
 
 CLI (from backend/):
-    uv run python -m flamescope.rag chunks [--show N]
-    uv run python -m flamescope.rag index
-    uv run python -m flamescope.rag search "query" [-k 5] [--psi PSI-69 ...] [--source abstract ...]
+    uv run python -m ignitiq.rag chunks [--show N]
+    uv run python -m ignitiq.rag index
+    uv run python -m ignitiq.rag search "query" [-k 5] [--psi PSI-69 ...] [--source abstract ...]
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from flamescope.db import connect
+from ignitiq.db import connect
 
 BACKEND = Path(__file__).resolve().parents[1]
 RAW = BACKEND / "data" / "raw"
@@ -530,7 +530,7 @@ def load_index():
     """(embeddings, chunks, meta). Refuses files that don't belong together."""
     missing = [p.name for p in (EMB_PATH, CHUNKS_PATH, INDEX_META_PATH) if not p.exists()]
     if missing:
-        raise RuntimeError(f"index missing {missing}: run `uv run python -m flamescope.rag index`")
+        raise RuntimeError(f"index missing {missing}: run `uv run python -m ignitiq.rag index`")
     emb = np.load(EMB_PATH)
     df = pd.read_parquet(CHUNKS_PATH)
     meta = json.loads(INDEX_META_PATH.read_text())
@@ -538,7 +538,7 @@ def load_index():
             or emb.shape != (len(df), meta.get("dim"))
             or len(df) != meta.get("n_chunks")
             or _chunks_sha(df) != meta.get("chunks_sha")):
-        raise RuntimeError("index files out of sync: run `uv run python -m flamescope.rag index`")
+        raise RuntimeError("index files out of sync: run `uv run python -m ignitiq.rag index`")
     return emb, df, meta
 
 
@@ -587,7 +587,7 @@ def search(query: str, k: int = 5, psi_ids=None, source_types=None, dedupe: bool
 # ---------------------------------------------------------------- CLI
 
 def main(argv=None) -> None:
-    ap = argparse.ArgumentParser(prog="flamescope.rag")
+    ap = argparse.ArgumentParser(prog="ignitiq.rag")
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("chunks", help="build chunks and print a report")
     c.add_argument("--show", type=int, default=0, help="print N sample chunks per source type")

@@ -9,9 +9,9 @@ Every answer is verified: each citation against what the tools returned, and eac
 number against a tagged tool source (and the citation of its sentence).
 
 CLI (from backend/):
-    uv run python -m flamescope.agent --ping
-    uv run python -m flamescope.agent --budget
-    uv run python -m flamescope.agent "question" [--habitat lunar] [--model groq:openai/gpt-oss-120b] [--json]
+    uv run python -m ignitiq.agent --ping
+    uv run python -m ignitiq.agent --budget
+    uv run python -m ignitiq.agent "question" [--habitat lunar] [--model groq:openai/gpt-oss-120b] [--json]
 """
 from __future__ import annotations
 
@@ -30,11 +30,11 @@ import openai
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from flamescope import conditions, rag
-from flamescope.db import connect
-from flamescope.tools import run_tool, to_text, tool_specs
+from ignitiq import conditions, rag
+from ignitiq.db import connect
+from ignitiq.tools import run_tool, to_text, tool_specs
 
-log = logging.getLogger("flamescope.agent")
+log = logging.getLogger("ignitiq.agent")
 load_dotenv(rag.BACKEND / ".env")
 
 PROVIDERS = {
@@ -114,7 +114,7 @@ def parse_chain(spec: str | None = None) -> list[tuple[str, str]]:
 def _client(provider: str) -> OpenAI:
     cfg = PROVIDERS[provider]
     key = os.getenv(cfg["key_env"]) if cfg["key_env"] else "ollama"
-    headers = ({"HTTP-Referer": "https://github.com/ana-lan/flamescope", "X-Title": "FlameScope"}
+    headers = ({"HTTP-Referer": "https://github.com/ana-lan/ignit-iq", "X-Title": "IgnitIQ"}
                if provider == "openrouter" else None)
     # max_retries=0: failure is handled by waiting or moving down the chain, not by SDK retries.
     return OpenAI(base_url=cfg["base_url"], api_key=key, timeout=cfg["timeout"],
@@ -785,7 +785,7 @@ def budget(chain: list) -> None:
 
 def main(argv=None) -> None:
     logging.basicConfig(level=logging.WARNING, format="  [%(name)s] %(message)s")
-    ap = argparse.ArgumentParser(prog="flamescope.agent")
+    ap = argparse.ArgumentParser(prog="ignitiq.agent")
     ap.add_argument("question", nargs="?")
     ap.add_argument("--habitat", choices=["iss", "gateway", "lunar", "apollo1"])
     ap.add_argument("--model", help="force one entry, e.g. groq:openai/gpt-oss-120b or ollama:qwen3:8b")

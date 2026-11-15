@@ -20,7 +20,7 @@ The response shapes below are defined as pydantic models in `backend/api/schemas
   - 422 validation: `{"detail": [ {"loc", "msg", "type"} ]}`
   - 404, 429, 503: `{"detail": "message"}`
 - Responses over 1 KB are gzipped, except `/ask` (streamed).
-- **CORS:** `CORS_ORIGINS` (default localhost:3000) and `CORS_ORIGIN_REGEX` (default `https://flamescope[\w-]*\.vercel\.app`).
+- **CORS:** `CORS_ORIGINS` (default localhost:3000) and `CORS_ORIGIN_REGEX` (default `https://ignit-?iq[\w-]*\.vercel\.app`).
 
 ## GET /health
 
@@ -243,7 +243,7 @@ One JSON object, identical to the `final` payload.
 
 ### Citation format
 
-The backend parses citations with exactly these patterns (`backend/flamescope/agent.py`: `CITATION_RE`, `CITATION_ID_RE`). The frontend should use the same ones:
+The backend parses citations with exactly these patterns (`backend/ignitiq/agent.py`: `CITATION_RE`, `CITATION_ID_RE`). The frontend should use the same ones:
 
 ```
 CITATION_RE    = \[([^\[\]]{2,120})\]                 one bracket group

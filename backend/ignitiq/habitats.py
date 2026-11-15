@@ -1,7 +1,7 @@
 """Habitat atmosphere presets, each traced to a NASA source.
 
 Loaded into the `habitats` table by db.py. Coverage preview from backend/:
-    uv run python -m flamescope.habitats
+    uv run python -m ignitiq.habitats
 """
 from __future__ import annotations
 
@@ -66,6 +66,6 @@ def coverage_preview(con, p_tol: float = 0.15, o2_tol: float = 0.03) -> None:
 
 
 if __name__ == "__main__":
-    from flamescope.db import connect
+    from ignitiq.db import connect
     print(habitats_df()[["slug", "name", "kind", "pressure_kpa", "o2_frac", "pp_o2_kpa"]].to_string(index=False))
     coverage_preview(connect())

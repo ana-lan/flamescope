@@ -3,8 +3,8 @@
 Every query returns one row with a `value` column and a `psi_ids` list (the sources it used);
 all other columns are kept as `detail` and can be used in the template.
 Written into the `insights` table by db.py. Inspect or verify from backend/:
-    uv run python -m flamescope.insights            # list stored insights
-    uv run python -m flamescope.insights --verify   # rerun every stored SQL, compare values
+    uv run python -m ignitiq.insights            # list stored insights
+    uv run python -m ignitiq.insights --verify   # rerun every stored SQL, compare values
 """
 from __future__ import annotations
 
@@ -195,7 +195,7 @@ def verify(con) -> bool:
 
 
 if __name__ == "__main__":
-    from flamescope.db import connect
+    from ignitiq.db import connect
     ap = argparse.ArgumentParser()
     ap.add_argument("--verify", action="store_true")
     a = ap.parse_args()

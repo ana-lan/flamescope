@@ -78,7 +78,7 @@ def main() -> None:
         pre = {"Access-Control-Request-Method": "GET"}
         r = c.options("/habitats", headers={"Origin": "http://localhost:3000", **pre})
         check("CORS allows localhost:3000", r.headers.get("access-control-allow-origin") == "http://localhost:3000")
-        r = c.options("/habitats", headers={"Origin": "https://flamescope-git-main-ana-lan.vercel.app", **pre})
+        r = c.options("/habitats", headers={"Origin": "https://ignit-iq-git-main-ana-lan.vercel.app", **pre})
         check("CORS allows Vercel preview", r.headers.get("access-control-allow-origin", "").endswith("vercel.app"))
         r = c.get("/habitats", headers={"Origin": "https://evil.example.com"})
         check("CORS blocks other origins", "access-control-allow-origin" not in r.headers)

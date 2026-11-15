@@ -2,7 +2,7 @@
 
 Mappers live in map_per_test.py (2.3) and map_summary.py (2.4). Each exposes SPECS.
 
-Check from backend/:  uv run python -m flamescope.tables [EXPERIMENT ...] [--show N]
+Check from backend/:  uv run python -m ignitiq.tables [EXPERIMENT ...] [--show N]
 """
 from __future__ import annotations
 
@@ -16,11 +16,11 @@ from typing import Callable
 
 import pandas as pd
 
-from flamescope.schema import CORE_COLUMNS, TestRow, clean, raw_extra
+from ignitiq.schema import CORE_COLUMNS, TestRow, clean, raw_extra
 
 BACKEND = Path(__file__).resolve().parents[1]
 TABLE_DIR = BACKEND / "data" / "raw" / "tables"
-MAPPER_MODULES = ["flamescope.map_per_test", "flamescope.map_summary"]
+MAPPER_MODULES = ["ignitiq.map_per_test", "ignitiq.map_summary"]
 
 
 @dataclass

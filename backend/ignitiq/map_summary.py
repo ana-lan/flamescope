@@ -8,8 +8,8 @@ from __future__ import annotations
 import re
 from datetime import date, timedelta
 
-from flamescope.schema import clean, fix_autofill, num, num_list, parse_fuel_bottle, strict_num, to_kpa
-from flamescope.tables import Spec, first, fuel_name
+from ignitiq.schema import clean, fix_autofill, num, num_list, parse_fuel_bottle, strict_num, to_kpa
+from ignitiq.tables import Spec, first, fuel_name
 
 ATM_KPA = 101.325
 

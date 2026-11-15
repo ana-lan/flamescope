@@ -7,10 +7,10 @@ from __future__ import annotations
 
 import re
 
-from flamescope.schema import (
+from ignitiq.schema import (
     clean, dominant_diluent, duration_s, num, num_or_mid, outcome, pct, strict_num, to_kpa,
 )
-from flamescope.tables import Spec, first, fuel_name
+from ignitiq.tables import Spec, first, fuel_name
 
 
 def _drop_none(d: dict) -> dict:

@@ -9,8 +9,8 @@ so everything is testable from the CLI without an API key.
     nearest_conditions(habitat? | pressure_kpa + o2_frac, per_experiment?)
 
 CLI (from backend/):
-    uv run python -m flamescope.tools               # self-test
-    uv run python -m flamescope.tools --specs       # print the tool descriptions
+    uv run python -m ignitiq.tools               # self-test
+    uv run python -m ignitiq.tools --specs       # print the tool descriptions
 """
 from __future__ import annotations
 
@@ -25,9 +25,9 @@ import threading
 
 import duckdb
 
-from flamescope import conditions, rag
-from flamescope.conditions import _records
-from flamescope.db import connect
+from ignitiq import conditions, rag
+from ignitiq.conditions import _records
+from ignitiq.db import connect
 
 MAX_ROWS = 200
 MAX_SQL_CHARS = 8000
@@ -554,7 +554,7 @@ def _selftest() -> bool:
 
 
 def main(argv=None) -> None:
-    ap = argparse.ArgumentParser(prog="flamescope.tools")
+    ap = argparse.ArgumentParser(prog="ignitiq.tools")
     ap.add_argument("--specs", action="store_true", help="print the tool descriptions")
     args = ap.parse_args(argv)
     if args.specs:

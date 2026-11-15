@@ -3,7 +3,7 @@
 Tables: investigations, publications, tests. Rebuilt from scratch each run, written atomically.
 Fails (writes nothing) if any test row fails validation.
 
-Run from backend/:  uv run python -m flamescope.db
+Run from backend/:  uv run python -m ignitiq.db
 """
 from __future__ import annotations
 
@@ -16,10 +16,10 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from flamescope.habitats import habitats_df
-from flamescope.insights import write_insights
-from flamescope.schema import CORE_COLUMNS
-from flamescope.tables import build_tests
+from ignitiq.habitats import habitats_df
+from ignitiq.insights import write_insights
+from ignitiq.schema import CORE_COLUMNS
+from ignitiq.tables import build_tests
 
 BACKEND = Path(__file__).resolve().parents[1]
 RAW = BACKEND / "data" / "raw"

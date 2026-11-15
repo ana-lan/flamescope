@@ -61,7 +61,7 @@ def get(client: httpx.Client, url: str, **kw) -> httpx.Response:
 
 def make_client() -> httpx.Client:
     return httpx.Client(timeout=60, follow_redirects=True,
-                        headers={"User-Agent": "flamescope/0.1 (NASA Space Apps 2026)"})
+                        headers={"User-Agent": "ignitiq/0.1 (NASA Space Apps 2026)"})
 
 
 def write_atomic(path: Path, data: bytes) -> None:

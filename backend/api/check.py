@@ -28,8 +28,8 @@ from pydantic import TypeAdapter, ValidationError
 
 from api.main import CACHE_PATH, app, cache_key
 from api.schemas import AskFinal, Coverage, Habitat, Health, Insight, InvestigationDetail, TestsPage
-from flamescope import agent, tools
-from flamescope.rag import BACKEND
+from ignitiq import agent, tools
+from ignitiq.rag import BACKEND
 
 API = os.getenv("API_URL", "http://localhost:8000")
 RESULTS = BACKEND / "eval" / "phase3_results.json"

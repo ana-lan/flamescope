@@ -3,7 +3,7 @@
 Every mapper (2.3, 2.4) builds TestRow objects using these helpers.
 Helpers return None, never NaN, so DuckDB stores real NULLs and `extra` stays valid JSON.
 
-Self-test from backend/:  uv run python -m flamescope.schema
+Self-test from backend/:  uv run python -m ignitiq.schema
 """
 from __future__ import annotations
 

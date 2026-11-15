@@ -1,6 +1,6 @@
 # Schema notes (Phase 2)
 
-Source: `backend/ingest/profile_tables.py` report over `backend/data/raw/tables/` (21 CSVs, 1,999 flight rows + 8 rows in PSI-142). Mappers: `backend/flamescope/map_per_test.py` (1,871 rows) and `map_summary.py` (128 rows).
+Source: `backend/ingest/profile_tables.py` report over `backend/data/raw/tables/` (21 CSVs, 1,999 flight rows + 8 rows in PSI-142). Mappers: `backend/ignitiq/map_per_test.py` (1,871 rows) and `map_summary.py` (128 rows).
 
 ## Core `tests` columns
 
@@ -24,7 +24,7 @@ Source: `backend/ingest/profile_tables.py` report over `backend/data/raw/tables/
 Rules:
 - Every source row becomes one `tests` row (count must equal 1,999). Duplicates are kept and flagged `extra.is_duplicate = true`.
 - `extra` layout: parsed fields and flags at the top level, the untouched CSV row under `extra.raw`, plus `source_file` and `source_row`. Summary-table rows carry `extra.row_kind = "summary"`.
-- Every row passes the pydantic `TestRow` model (`flamescope/schema.py`): o2 and diluent fractions in [0, 1], pressure > 0, outcome in the fixed vocabulary.
+- Every row passes the pydantic `TestRow` model (`ignitiq/schema.py`): o2 and diluent fractions in [0, 1], pressure > 0, outcome in the fixed vocabulary.
 - Non-numeric values in numeric columns (`RAMP`, `none`, `n/a`) become null in core; the raw string stays in `extra.raw`.
 - Values with units (`.33 cm`, `30 cm/s`, `145 s`) are parsed by regex only where the column is known to carry units; pure-number columns use strict parsing.
 - Ranges (`21.5 - 21.7`, `22.1 to 22.0`) become the midpoint; lists (`21; 26.5; 40`) go to `extra.*_values` and leave the core column null.

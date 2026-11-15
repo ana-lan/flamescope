@@ -7,9 +7,9 @@ Distance unit = one Phase 2 box width on each axis (±15% pressure, ±3 pts O2),
 in_box (both deltas <= 1) reproduces the Phase 2 coverage preview.
 
 CLI (from backend/):
-    uv run python -m flamescope.conditions                 # all habitat presets
-    uv run python -m flamescope.conditions lunar -n 5
-    uv run python -m flamescope.conditions --p 70 --o2 0.30
+    uv run python -m ignitiq.conditions                 # all habitat presets
+    uv run python -m ignitiq.conditions lunar -n 5
+    uv run python -m ignitiq.conditions --p 70 --o2 0.30
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from flamescope.db import connect
+from ignitiq.db import connect
 
 P_TOL = 0.15        # ±15% of the target pressure = 1 unit
 O2_TOL = 0.03       # ±3 percentage points of O2 = 1 unit
@@ -220,7 +220,7 @@ def _print(res: dict, title: str, n: int) -> None:
 
 
 def main(argv=None) -> None:
-    ap = argparse.ArgumentParser(prog="flamescope.conditions")
+    ap = argparse.ArgumentParser(prog="ignitiq.conditions")
     ap.add_argument("slug", nargs="?", help="habitat slug; omit for all presets")
     ap.add_argument("--p", type=float, help="custom pressure in kPa (with --o2)")
     ap.add_argument("--o2", type=float, help="custom O2 fraction, e.g. 0.30")

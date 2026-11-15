@@ -29,12 +29,12 @@ from starlette.concurrency import iterate_in_threadpool, run_in_threadpool
 
 from api.schemas import (AskFinal, Coverage, Facets, Habitat, HabitatSlug, Health, Insight,
                          InvestigationDetail, InvestigationSummary, Suggested, TestsPage)
-from flamescope import agent, conditions, rag, tools
-from flamescope.db import connect
-from flamescope.tools import _val
+from ignitiq import agent, conditions, rag, tools
+from ignitiq.db import connect
+from ignitiq.tools import _val
 
 VERSION = "0.3.1"
-log = logging.getLogger("flamescope.api")
+log = logging.getLogger("ignitiq.api")
 
 CORE_COLS = ["test_pk", "psi_id", "experiment", "test_id", "fuel", "material", "pressure_kpa", "o2_frac",
              "diluent", "diluent_frac", "flow_cm_s", "outcome", "burn_time_s", "spread_rate_mm_s"]
@@ -96,7 +96,7 @@ _origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_origins,
-    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX", r"https://flamescope[\w-]*\.vercel\.app"),
+    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX", r"https://ignit-?iq[\w-]*\.vercel\.app"),
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )

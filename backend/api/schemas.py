@@ -9,7 +9,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from flamescope import conditions
+from ignitiq import conditions
 
 HABITAT_SLUGS = tuple(h["slug"] for h in conditions.list_habitats())
 HabitatSlug = Literal[HABITAT_SLUGS]  # Literal["iss", "gateway", "lunar", "apollo1"] from the database
