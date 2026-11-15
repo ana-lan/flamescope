@@ -12,7 +12,7 @@
 ![Next.js 15](https://img.shields.io/badge/Next.js-15-000000)
 ![Data CC0](https://img.shields.io/badge/data-CC0-lightgrey)
 
-**Live demo:** [ignit-iq.vercel.app](https://ignit-iq.vercel.app) | **API:** [ignit-iq.onrender.com/docs](https://ignit-iq.onrender.com/docs)
+**Live demo:** [ignit-iq.vercel.app](https://ignit-iq.vercel.app) | **Demo video:** [youtu.be/Jy1ILpy2_Aw](https://youtu.be/Jy1ILpy2_Aw) | **API:** [ignit-iq.onrender.com/docs](https://ignit-iq.onrender.com/docs)
 
 <sub>The API sleeps when idle, so the first load can take up to a minute while it wakes.</sub>
 
