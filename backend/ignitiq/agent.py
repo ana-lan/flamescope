@@ -33,6 +33,7 @@ from openai import OpenAI
 from ignitiq import conditions, rag
 from ignitiq.db import connect
 from ignitiq.tools import run_tool, to_text, tool_specs
+from ignitiq.meaning import REPAIR_HINT, meaning_issues
 
 log = logging.getLogger("ignitiq.agent")
 load_dotenv(rag.BACKEND / ".env")
@@ -634,8 +635,10 @@ def _grounding(answer: str, trace: dict, user_text: str) -> dict:
             numbers.append({"value": s, "cited": sorted(cited), "source": src, "ok": src is not None and attributed})
     unverified = [n["value"] for n in numbers if n["source"] is None]
     misattributed = [n["value"] for n in numbers if n["source"] is not None and not n["ok"]]
+    meaning = meaning_issues(answer)
     return {"numbers_checked": len(numbers), "numbers": numbers, "unverified": unverified,
-            "misattributed": misattributed, "ok": not unverified and not misattributed}
+            "misattributed": misattributed, "meaning": meaning,
+            "ok": not unverified and not misattributed and not meaning}
 
 
 def _backfill_citations(answer: str, trace: dict, user_text: str) -> tuple[str, list]:
@@ -677,7 +680,7 @@ def _new_trace() -> dict:
 # ---------------------------------------------------------------- the loop
 
 def _repair_prompt(g: dict) -> str:
-    """Tell the model exactly which numbers failed verification and why."""
+    """Tell the model exactly which numbers or meanings failed verification and why."""
     lines = []
     for n in g["numbers"]:
         if n["ok"]:
@@ -687,11 +690,23 @@ def _repair_prompt(g: dict) -> str:
         else:
             lines.append(f"- {n['value']}: comes from {n['source']}, but its sentence cites "
                          f"{', '.join(n['cited']) or 'nothing'}")
-    return ("Automatic check before your answer is shown. These numbers failed:\n" + "\n".join(lines)
-            + "\nRewrite the whole answer. Keep every number that passed. For each failed number: use the "
-              "exact value from a tool result above (rounded normally), cite the investigation it came "
-              "from, or remove it. Never estimate: if the data has no value, say the data does not "
-              "record it. Follow the same citation rules.")
+    msg = ""
+    if lines:
+        msg = ("Automatic check before your answer is shown. These numbers failed:\n" + "\n".join(lines)
+               + "\nRewrite the whole answer. Keep every number that passed. For each failed number: use the "
+                 "exact value from a tool result above (rounded normally), cite the investigation it came "
+                 "from, or remove it. Never estimate: if the data has no value, say the data does not "
+                 "record it. Follow the same citation rules.")
+    meaning = g.get("meaning") or []
+    if meaning:
+        flagged = "\n".join(f'- "{m["sentence"]}"' for m in meaning)
+        block = ("These sentences misstate what a CFI-G outcome means:\n" + flagged + "\n" + REPAIR_HINT)
+        if msg:
+            msg += "\n\n" + block
+        else:
+            msg = ("Automatic check before your answer is shown. " + block
+                   + "\nRewrite the whole answer. Follow the same citation rules.")
+    return msg
 
 
 def run(question: str, habitat: str | None = None, chain: list | None = None) -> Iterator[dict]:
@@ -768,7 +783,7 @@ def run(question: str, habitat: str | None = None, chain: list | None = None) ->
             fixed = _norm_answer(fixed)
             fixed, added2 = _backfill_citations(fixed, trace, user)
             g2 = _grounding(fixed, trace, user)
-            bad = lambda g: len(g["unverified"]) + len(g["misattributed"])
+            bad = lambda g: len(g["unverified"]) + len(g["misattributed"]) + len(g.get("meaning", []))
             if bad(g2) < bad(grounding):
                 answer, citations_added, grounding, repaired = fixed, added2, g2, True
     yield {"type": "answer", "text": answer}
@@ -881,7 +896,8 @@ def main(argv=None) -> None:
                     f"{c['id']}{'' if c['verified'] else ' (UNVERIFIED)'}" for c in ev["citations"]) or "none"))
                 g = ev["grounding"]
                 print(f"numbers: {g['numbers_checked']} checked | unverified: {g['unverified'] or 'none'} | "
-                      f"misattributed: {g['misattributed'] or 'none'}")
+                      f"misattributed: {g['misattributed'] or 'none'} | "
+                      f"meaning: {len(g.get('meaning', [])) or 'none'}")
                 for n in g["numbers"]:
                     print(f"   {n['value']:>8}  cited={','.join(n['cited']) or '-':<24} <- "
                           f"{n['source'] or 'NO SOURCE'}{'' if n['ok'] else '   FAIL'}")
