@@ -1,599 +1,744 @@
 {
- "-|how many flex tests ended in extinction, and over what o2 range": {
-  "question": "How many FLEX tests ended in extinction, and over what O2 range?",
-  "habitat": null,
-  "answer": "186 FLEX tests ended in extinction, occurring across an O₂ fraction range from 0.12 to 0.30. [PSI-69]",
-  "citations": [
-   {
-    "id": "PSI-69",
-    "kind": "investigation",
-    "label": "FLEX",
-    "title": "Flame Extinguishment Experiment",
-    "doi": "10.60555/mbq8-0451",
-    "url": "https://doi.org/10.60555/mbq8-0451",
-    "known": true,
-    "verified": true
-   }
-  ],
-  "sql_run": [
-   {
-    "sql": "SELECT COUNT(*) AS cnt, MIN(o2_frac) AS min_o2, MAX(o2_frac) AS max_o2 FROM tests WHERE psi_id='PSI-69' AND outcome='extinction' AND (extra->>'is_duplicate' IS NULL OR extra->>'is_duplicate'!='true')",
-    "error": null,
-    "columns": [
-     "cnt",
-     "min_o2",
-     "max_o2"
+  "-|how many flex tests ended in extinction, and over what o2 range": {
+    "question": "How many FLEX tests ended in extinction, and over what O2 range?",
+    "habitat": null,
+    "answer": "186 FLEX tests ended in extinction, occurring across an O₂ fraction range from 0.12 to 0.30. [PSI-69]",
+    "citations": [
+      {
+        "id": "PSI-69",
+        "kind": "investigation",
+        "label": "FLEX",
+        "title": "Flame Extinguishment Experiment",
+        "doi": "10.60555/mbq8-0451",
+        "url": "https://doi.org/10.60555/mbq8-0451",
+        "known": true,
+        "verified": true
+      }
     ],
-    "rows": [
-     [
-      186,
-      0.12,
-      0.3
-     ]
+    "sql_run": [
+      {
+        "sql": "SELECT COUNT(*) AS cnt, MIN(o2_frac) AS min_o2, MAX(o2_frac) AS max_o2 FROM tests WHERE psi_id='PSI-69' AND outcome='extinction' AND (extra->>'is_duplicate' IS NULL OR extra->>'is_duplicate'!='true')",
+        "error": null,
+        "columns": [
+          "cnt",
+          "min_o2",
+          "max_o2"
+        ],
+        "rows": [
+          [
+            186,
+            0.12,
+            0.3
+          ]
+        ],
+        "row_count": 1,
+        "truncated": false,
+        "original_sql": null,
+        "auto_fixed": null
+      }
     ],
-    "row_count": 1,
-    "truncated": false,
-    "original_sql": null,
-    "auto_fixed": null
-   }
-  ],
-  "passages": [],
-  "steps": [
-   {
-    "tool": "query_tests",
-    "args": {
-     "sql": "SELECT COUNT(*) AS cnt, MIN(o2_frac) AS min_o2, MAX(o2_frac) AS max_o2 FROM tests WHERE psi_id='PSI-69' AND outcome='extinction' AND (extra->>'is_duplicate' IS NULL OR extra->>'is_duplicate'!='true')"
+    "passages": [],
+    "steps": [
+      {
+        "tool": "query_tests",
+        "args": {
+          "sql": "SELECT COUNT(*) AS cnt, MIN(o2_frac) AS min_o2, MAX(o2_frac) AS max_o2 FROM tests WHERE psi_id='PSI-69' AND outcome='extinction' AND (extra->>'is_duplicate' IS NULL OR extra->>'is_duplicate'!='true')"
+        },
+        "summary": "1 rows"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 3,
+      "numbers": [
+        {
+          "value": "186",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "0.12",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "0.30",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "ok": true
     },
-    "summary": "1 rows"
-   }
-  ],
-  "grounding": {
-   "numbers_checked": 3,
-   "numbers": [
-    {
-     "value": "186",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    },
-    {
-     "value": "0.12",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    },
-    {
-     "value": "0.30",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    }
-   ],
-   "unverified": [],
-   "misattributed": [],
-   "ok": true
-  },
-  "answer_truncated": false,
-  "model": "groq:openai/gpt-oss-120b",
-  "models_failed": [],
-  "llm_calls": 2,
-  "usage": {
-   "prompt_tokens": 3935,
-   "completion_tokens": 159
-  },
-  "llm_trace": [
-   {
+    "answer_truncated": false,
     "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1892,
-    "completion_tokens": 124,
-    "est_prompt_tokens": 1780,
-    "latency_s": 1.19,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 2043,
-    "completion_tokens": 35,
-    "est_prompt_tokens": 1943,
-    "latency_s": 0.35,
-    "finish": "stop"
-   }
-  ],
-  "elapsed_s": 1.56,
-  "cached_at": "2026-11-15 01:07:48",
-  "citations_added": []
- },
- "-|in flex, what percentage of droplet tests ended in extinction with each suppressant gas: co2, nitrogen and helium": {
-  "question": "In FLEX, what percentage of droplet tests ended in extinction with each suppressant gas: CO2, nitrogen and helium?",
-  "habitat": null,
-  "answer": "In the FLEX droplet series, extinction occurred in 90 % of the CO₂ tests, 75 % of the helium tests, and 66 % of the nitrogen tests[PSI-69].",
-  "citations": [
-   {
-    "id": "PSI-69",
-    "kind": "investigation",
-    "label": "FLEX",
-    "title": "Flame Extinguishment Experiment",
-    "doi": "10.60555/mbq8-0451",
-    "url": "https://doi.org/10.60555/mbq8-0451",
-    "known": true,
-    "verified": true
-   }
-  ],
-  "sql_run": [
-   {
-    "sql": "WITH filtered AS (\n  SELECT diluent, outcome\n  FROM tests\n  WHERE psi_id = 'PSI-69'\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND (outcome IS NOT NULL AND outcome <> 'no_ignition')\n)\nSELECT diluent,\n       100.0 * SUM(CASE WHEN outcome = 'extinction' THEN 1 ELSE 0 END) / COUNT(*) AS pct_extinction\nFROM filtered\nWHERE diluent IN ('CO2','N2','He')\nGROUP BY diluent;",
-    "error": null,
-    "columns": [
-     "diluent",
-     "pct_extinction"
+    "models_failed": [],
+    "llm_calls": 2,
+    "usage": {
+      "prompt_tokens": 3935,
+      "completion_tokens": 159
+    },
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1892,
+        "completion_tokens": 124,
+        "est_prompt_tokens": 1780,
+        "latency_s": 1.19,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2043,
+        "completion_tokens": 35,
+        "est_prompt_tokens": 1943,
+        "latency_s": 0.35,
+        "finish": "stop"
+      }
     ],
-    "rows": [
-     [
-      "CO2",
-      90.0
-     ],
-     [
-      "He",
-      75.0
-     ],
-     [
-      "N2",
-      66.0
-     ]
-    ],
-    "row_count": 3,
-    "truncated": false,
-    "original_sql": null,
-    "auto_fixed": null
-   }
-  ],
-  "passages": [],
-  "steps": [
-   {
-    "tool": "query_tests",
-    "args": {
-     "sql": "WITH filtered AS (\n  SELECT diluent, outcome\n  FROM tests\n  WHERE psi_id = 'PSI-69'\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND (outcome IS NOT NULL AND outcome <> 'no_ignition')\n)\nSELECT diluent,\n       100.0 * SUM(CASE WHEN outcome = 'extinction' THEN 1 ELSE 0 END) / COUNT(*) AS pct_extinction\nFROM filtered\nWHERE diluent IN ('CO2','N2','He')\nGROUP BY diluent;"
-    },
-    "summary": "3 rows"
-   }
-  ],
-  "grounding": {
-   "numbers_checked": 3,
-   "numbers": [
-    {
-     "value": "90",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    },
-    {
-     "value": "75",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    },
-    {
-     "value": "66",
-     "cited": [
-      "PSI-69"
-     ],
-     "source": "sql",
-     "ok": true
-    }
-   ],
-   "unverified": [],
-   "misattributed": [],
-   "ok": true
+    "elapsed_s": 1.56,
+    "cached_at": "2026-11-15 01:07:48",
+    "citations_added": []
   },
-  "answer_truncated": false,
-  "model": "groq:openai/gpt-oss-120b",
-  "models_failed": [],
-  "llm_calls": 2,
-  "usage": {
-   "prompt_tokens": 4034,
-   "completion_tokens": 275
+  "-|in flex, what percentage of droplet tests ended in extinction with each suppressant gas: co2, nitrogen and helium": {
+    "question": "In FLEX, what percentage of droplet tests ended in extinction with each suppressant gas: CO2, nitrogen and helium?",
+    "habitat": null,
+    "answer": "In the FLEX droplet series, extinction occurred in 90 % of the CO₂ tests, 75 % of the helium tests, and 66 % of the nitrogen tests[PSI-69].",
+    "citations": [
+      {
+        "id": "PSI-69",
+        "kind": "investigation",
+        "label": "FLEX",
+        "title": "Flame Extinguishment Experiment",
+        "doi": "10.60555/mbq8-0451",
+        "url": "https://doi.org/10.60555/mbq8-0451",
+        "known": true,
+        "verified": true
+      }
+    ],
+    "sql_run": [
+      {
+        "sql": "WITH filtered AS (\n  SELECT diluent, outcome\n  FROM tests\n  WHERE psi_id = 'PSI-69'\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND (outcome IS NOT NULL AND outcome <> 'no_ignition')\n)\nSELECT diluent,\n       100.0 * SUM(CASE WHEN outcome = 'extinction' THEN 1 ELSE 0 END) / COUNT(*) AS pct_extinction\nFROM filtered\nWHERE diluent IN ('CO2','N2','He')\nGROUP BY diluent;",
+        "error": null,
+        "columns": [
+          "diluent",
+          "pct_extinction"
+        ],
+        "rows": [
+          [
+            "CO2",
+            90.0
+          ],
+          [
+            "He",
+            75.0
+          ],
+          [
+            "N2",
+            66.0
+          ]
+        ],
+        "row_count": 3,
+        "truncated": false,
+        "original_sql": null,
+        "auto_fixed": null
+      }
+    ],
+    "passages": [],
+    "steps": [
+      {
+        "tool": "query_tests",
+        "args": {
+          "sql": "WITH filtered AS (\n  SELECT diluent, outcome\n  FROM tests\n  WHERE psi_id = 'PSI-69'\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND (outcome IS NOT NULL AND outcome <> 'no_ignition')\n)\nSELECT diluent,\n       100.0 * SUM(CASE WHEN outcome = 'extinction' THEN 1 ELSE 0 END) / COUNT(*) AS pct_extinction\nFROM filtered\nWHERE diluent IN ('CO2','N2','He')\nGROUP BY diluent;"
+        },
+        "summary": "3 rows"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 3,
+      "numbers": [
+        {
+          "value": "90",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "75",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "66",
+          "cited": [
+            "PSI-69"
+          ],
+          "source": "sql",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "ok": true
+    },
+    "answer_truncated": false,
+    "model": "groq:openai/gpt-oss-120b",
+    "models_failed": [],
+    "llm_calls": 2,
+    "usage": {
+      "prompt_tokens": 4034,
+      "completion_tokens": 275
+    },
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1901,
+        "completion_tokens": 226,
+        "est_prompt_tokens": 1792,
+        "latency_s": 0.87,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2133,
+        "completion_tokens": 49,
+        "est_prompt_tokens": 2019,
+        "latency_s": 0.51,
+        "finish": "stop"
+      }
+    ],
+    "elapsed_s": 1.4,
+    "cached_at": "2026-11-15 01:08:55",
+    "citations_added": []
   },
-  "llm_trace": [
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1901,
-    "completion_tokens": 226,
-    "est_prompt_tokens": 1792,
-    "latency_s": 0.87,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 2133,
-    "completion_tokens": 49,
-    "est_prompt_tokens": 2019,
-    "latency_s": 0.51,
-    "finish": "stop"
-   }
-  ],
-  "elapsed_s": 1.4,
-  "cached_at": "2026-11-15 01:08:55",
-  "citations_added": []
- },
- "-|how long did the concurrent and opposed flow fires burn in saffire-i": {
-  "question": "How long did the concurrent and opposed flow fires burn in SAFFIRE-I?",
-  "habitat": null,
-  "answer": "The average burn time for SAFFIRE-I tests was about **420 s for concurrent-flow fires** and **70 s for opposed-flow fires**[PSI-98].",
-  "citations": [
-   {
-    "id": "PSI-98",
-    "kind": "investigation",
-    "label": "SAFFIRE-I",
-    "title": "Spacecraft Fire Safety Experiment-I",
-    "doi": "10.60555/0t15-1z43",
-    "url": "https://doi.org/10.60555/0t15-1z43",
-    "known": true,
-    "verified": true
-   }
-  ],
-  "sql_run": [
-   {
-    "sql": "SELECT (extra->>'flow_direction'), AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND (extra->>'flow_direction') IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY (extra->>'flow_direction')",
-    "error": null,
-    "columns": [
-     "(extra ->> 'flow_direction')",
-     "avg_burn_s"
+  "-|how long did the concurrent and opposed flow fires burn in saffire-i": {
+    "question": "How long did the concurrent and opposed flow fires burn in SAFFIRE-I?",
+    "habitat": null,
+    "answer": "The average burn time for SAFFIRE-I tests was about **420 s for concurrent-flow fires** and **70 s for opposed-flow fires**[PSI-98].",
+    "citations": [
+      {
+        "id": "PSI-98",
+        "kind": "investigation",
+        "label": "SAFFIRE-I",
+        "title": "Spacecraft Fire Safety Experiment-I",
+        "doi": "10.60555/0t15-1z43",
+        "url": "https://doi.org/10.60555/0t15-1z43",
+        "known": true,
+        "verified": true
+      }
     ],
-    "rows": [
-     [
-      "concurrent",
-      420.0
-     ],
-     [
-      "opposed",
-      70.0
-     ]
+    "sql_run": [
+      {
+        "sql": "SELECT (extra->>'flow_direction'), AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND (extra->>'flow_direction') IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY (extra->>'flow_direction')",
+        "error": null,
+        "columns": [
+          "(extra ->> 'flow_direction')",
+          "avg_burn_s"
+        ],
+        "rows": [
+          [
+            "concurrent",
+            420.0
+          ],
+          [
+            "opposed",
+            70.0
+          ]
+        ],
+        "row_count": 2,
+        "truncated": false,
+        "original_sql": "SELECT flow_direction, AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND flow_direction IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY flow_direction",
+        "auto_fixed": [
+          "flow_direction -> extra->>'flow_direction'"
+        ]
+      }
     ],
-    "row_count": 2,
-    "truncated": false,
-    "original_sql": "SELECT flow_direction, AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND flow_direction IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY flow_direction",
-    "auto_fixed": [
-     "flow_direction -> extra->>'flow_direction'"
+    "passages": [],
+    "steps": [
+      {
+        "tool": "query_tests",
+        "args": {
+          "sql": "SELECT flow_direction, AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND flow_direction IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY flow_direction"
+        },
+        "summary": "2 rows (auto-fixed flow_direction -> extra->>'flow_direction')"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 2,
+      "numbers": [
+        {
+          "value": "420",
+          "cited": [
+            "PSI-98"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "70",
+          "cited": [
+            "PSI-98"
+          ],
+          "source": "sql",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "ok": true
+    },
+    "answer_truncated": false,
+    "model": "groq:openai/gpt-oss-120b",
+    "models_failed": [],
+    "llm_calls": 2,
+    "usage": {
+      "prompt_tokens": 3915,
+      "completion_tokens": 186
+    },
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1893,
+        "completion_tokens": 141,
+        "est_prompt_tokens": 1781,
+        "latency_s": 0.68,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2022,
+        "completion_tokens": 45,
+        "est_prompt_tokens": 1944,
+        "latency_s": 0.21,
+        "finish": "stop"
+      }
+    ],
+    "elapsed_s": 0.93,
+    "cached_at": "2026-11-15 01:10:01",
+    "citations_added": []
+  },
+  "-|in cfi-g, what share of flames kept burning until the fuel flow was stopped at 30% o2 or more, compared with below 25%": {
+    "question": "In CFI-G, what share of flames kept burning until the fuel flow was stopped at 30% O2 or more, compared with below 25%?",
+    "habitat": null,
+    "answer": "About one-third of the CFI-G flames (33.7 %) kept burning until the fuel flow was stopped when the ambient O₂ fraction was ≥ 30 % [PSI-159]. By contrast, none of the tests with O₂ < 25 % showed that behavior. [PSI-159]",
+    "citations": [
+      {
+        "id": "PSI-159",
+        "kind": "investigation",
+        "label": "ACME CFI-G",
+        "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
+        "doi": "10.60555/cyt1-kh64",
+        "url": "https://doi.org/10.60555/cyt1-kh64",
+        "known": true,
+        "verified": true
+      }
+    ],
+    "sql_run": [
+      {
+        "sql": "WITH filtered AS (\n  SELECT o2_frac, outcome\n  FROM tests\n  WHERE psi_id='PSI-159'\n    AND extra->>'row_kind' IS NULL\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND outcome IS NOT NULL\n    AND outcome <> 'no_ignition'\n)\nSELECT\n  SUM(CASE WHEN o2_frac >= 0.30 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac >= 0.30 THEN 1 ELSE 0 END),0) AS share_high,\n  SUM(CASE WHEN o2_frac < 0.25 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac < 0.25 THEN 1 ELSE 0 END),0) AS share_low\nFROM filtered;",
+        "error": null,
+        "columns": [
+          "share_high",
+          "share_low"
+        ],
+        "rows": [
+          [
+            0.336957,
+            0.0
+          ]
+        ],
+        "row_count": 1,
+        "truncated": false,
+        "original_sql": null,
+        "auto_fixed": null
+      }
+    ],
+    "passages": [],
+    "steps": [
+      {
+        "tool": "query_tests",
+        "args": {
+          "sql": "WITH filtered AS (\n  SELECT o2_frac, outcome\n  FROM tests\n  WHERE psi_id='PSI-159'\n    AND extra->>'row_kind' IS NULL\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND outcome IS NOT NULL\n    AND outcome <> 'no_ignition'\n)\nSELECT\n  SUM(CASE WHEN o2_frac >= 0.30 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac >= 0.30 THEN 1 ELSE 0 END),0) AS share_high,\n  SUM(CASE WHEN o2_frac < 0.25 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac < 0.25 THEN 1 ELSE 0 END),0) AS share_low\nFROM filtered;"
+        },
+        "summary": "1 rows"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 3,
+      "numbers": [
+        {
+          "value": "33.7",
+          "cited": [
+            "PSI-159"
+          ],
+          "source": "sql",
+          "ok": true
+        },
+        {
+          "value": "30",
+          "cited": [
+            "PSI-159"
+          ],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "25",
+          "cited": [
+            "PSI-159"
+          ],
+          "source": "question",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "ok": true
+    },
+    "answer_truncated": false,
+    "model": "groq:openai/gpt-oss-120b",
+    "models_failed": [],
+    "llm_calls": 2,
+    "usage": {
+      "prompt_tokens": 4129,
+      "completion_tokens": 347
+    },
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1910,
+        "completion_tokens": 278,
+        "est_prompt_tokens": 1793,
+        "latency_s": 0.98,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2219,
+        "completion_tokens": 69,
+        "est_prompt_tokens": 2072,
+        "latency_s": 0.74,
+        "finish": "stop"
+      }
+    ],
+    "elapsed_s": 1.74,
+    "cached_at": "2026-11-15 01:12:14",
+    "citations_added": [
+      {
+        "id": "PSI-159",
+        "sentence": "About one-third of the CFI-G flames (33.7 %) kept burning until the fuel flow was stopped when the ambient O₂ fraction w"
+      }
     ]
-   }
-  ],
-  "passages": [],
-  "steps": [
-   {
-    "tool": "query_tests",
-    "args": {
-     "sql": "SELECT flow_direction, AVG(burn_time_s) AS avg_burn_s FROM tests WHERE experiment='SAFFIRE-I' AND flow_direction IS NOT NULL AND burn_time_s IS NOT NULL GROUP BY flow_direction"
-    },
-    "summary": "2 rows (auto-fixed flow_direction -> extra->>'flow_direction')"
-   }
-  ],
-  "grounding": {
-   "numbers_checked": 2,
-   "numbers": [
-    {
-     "value": "420",
-     "cited": [
-      "PSI-98"
-     ],
-     "source": "sql",
-     "ok": true
-    },
-    {
-     "value": "70",
-     "cited": [
-      "PSI-98"
-     ],
-     "source": "sql",
-     "ok": true
-    }
-   ],
-   "unverified": [],
-   "misattributed": [],
-   "ok": true
   },
-  "answer_truncated": false,
-  "model": "groq:openai/gpt-oss-120b",
-  "models_failed": [],
-  "llm_calls": 2,
-  "usage": {
-   "prompt_tokens": 3915,
-   "completion_tokens": 186
-  },
-  "llm_trace": [
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1893,
-    "completion_tokens": 141,
-    "est_prompt_tokens": 1781,
-    "latency_s": 0.68,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 2022,
-    "completion_tokens": 45,
-    "est_prompt_tokens": 1944,
-    "latency_s": 0.21,
-    "finish": "stop"
-   }
-  ],
-  "elapsed_s": 0.93,
-  "cached_at": "2026-11-15 01:10:01",
-  "citations_added": []
- },
- "-|in cfi-g, what share of flames kept burning until the fuel flow was stopped at 30% o2 or more, compared with below 25%": {
-  "question": "In CFI-G, what share of flames kept burning until the fuel flow was stopped at 30% O2 or more, compared with below 25%?",
-  "habitat": null,
-  "answer": "About one-third of the CFI-G flames (33.7 %) kept burning until the fuel flow was stopped when the ambient O₂ fraction was ≥ 30 % [PSI-159]. By contrast, none of the tests with O₂ < 25 % showed that behavior. [PSI-159]",
-  "citations": [
-   {
-    "id": "PSI-159",
-    "kind": "investigation",
-    "label": "ACME CFI-G",
-    "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
-    "doi": "10.60555/cyt1-kh64",
-    "url": "https://doi.org/10.60555/cyt1-kh64",
-    "known": true,
-    "verified": true
-   }
-  ],
-  "sql_run": [
-   {
-    "sql": "WITH filtered AS (\n  SELECT o2_frac, outcome\n  FROM tests\n  WHERE psi_id='PSI-159'\n    AND extra->>'row_kind' IS NULL\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND outcome IS NOT NULL\n    AND outcome <> 'no_ignition'\n)\nSELECT\n  SUM(CASE WHEN o2_frac >= 0.30 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac >= 0.30 THEN 1 ELSE 0 END),0) AS share_high,\n  SUM(CASE WHEN o2_frac < 0.25 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac < 0.25 THEN 1 ELSE 0 END),0) AS share_low\nFROM filtered;",
-    "error": null,
-    "columns": [
-     "share_high",
-     "share_low"
+  "apollo1|could the test data tell us how the apollo 1 cabin fire would have behaved": {
+    "question": "Could the test data tell us how the Apollo 1 cabin fire would have behaved?",
+    "habitat": "apollo1",
+    "answer": "The nearest ISS combustion tests do not cover the Apollo 1 cabin atmosphere (115 kPa, 100 % O₂). The closest tested conditions are still far away, over 20 units in the combined pressure-O₂ space, and no experiment recorded outcomes at that pure-oxygen pressure. Consequently, the test database cannot directly predict flame spread, burn rate, or extinction behavior for the Apollo 1 fire; any inference would be an extrapolation beyond the measured regime. Historical investigations of the accident describe a rapid, uncontrollable fire in a pure-oxygen environment, but the ISS data alone do not provide quantitative behavior for those conditions. [PSI-159] [NASA:apollo_1]",
+    "citations": [
+      {
+        "id": "PSI-159",
+        "kind": "investigation",
+        "label": "ACME CFI-G",
+        "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
+        "doi": "10.60555/cyt1-kh64",
+        "url": "https://doi.org/10.60555/cyt1-kh64",
+        "known": true,
+        "verified": true
+      },
+      {
+        "id": "NASA:apollo_1",
+        "kind": "context",
+        "label": "Apollo 1 fire (1967)",
+        "title": "Apollo 1 fire (1967)",
+        "doi": null,
+        "url": "https://www.nasa.gov/mission/apollo-13/",
+        "known": true,
+        "verified": true
+      }
     ],
-    "rows": [
-     [
-      0.336957,
-      0.0
-     ]
+    "sql_run": [],
+    "passages": [
+      {
+        "chunk_id": "context:apollo_1:0",
+        "source_type": "context",
+        "psi_id": null,
+        "score": 0.7299,
+        "text": "Apollo 1 fire (1967)\ntitle: Apollo 1 - NASA source: https://www.nasa.gov/mission/apollo-1/ fetched: 2026-11-14 Apollo 1 On Jan. 27, 1967, tragedy struck on the launch pad at Cape Kennedy during a preflight test for Apollo 204 (AS-204). The mission was to be the first crewed flight of Apollo, and was scheduled to launch Feb. 21, 1967. Astronauts Virgil Grissom, Edward White and Roger Chaffee lost their lives when a fire swept through the command module. Mission Type Human Space Flight SCHEDULED TO LAUNCH Feb. 21, 1967 The Apollo 1 crew of Virgil I. “Gus” Grissom, left, Edward H. White, and Roge",
+        "experiment": null,
+        "field": "apollo_1",
+        "title": "Apollo 1 fire (1967)",
+        "doi": null,
+        "psi_doi": null,
+        "url": "https://www.nasa.gov/mission/apollo-13/",
+        "pages": null
+      }
     ],
-    "row_count": 1,
-    "truncated": false,
-    "original_sql": null,
-    "auto_fixed": null
-   }
-  ],
-  "passages": [],
-  "steps": [
-   {
-    "tool": "query_tests",
-    "args": {
-     "sql": "WITH filtered AS (\n  SELECT o2_frac, outcome\n  FROM tests\n  WHERE psi_id='PSI-159'\n    AND extra->>'row_kind' IS NULL\n    AND coalesce(extra->>'is_duplicate','false') <> 'true'\n    AND outcome IS NOT NULL\n    AND outcome <> 'no_ignition'\n)\nSELECT\n  SUM(CASE WHEN o2_frac >= 0.30 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac >= 0.30 THEN 1 ELSE 0 END),0) AS share_high,\n  SUM(CASE WHEN o2_frac < 0.25 AND outcome='flow_terminated' THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN o2_frac < 0.25 THEN 1 ELSE 0 END),0) AS share_low\nFROM filtered;"
+    "steps": [
+      {
+        "tool": "nearest_conditions",
+        "args": {
+          "fraction": 1,
+          "habitat": "apollo1",
+          "pressure_kpa": 115.1,
+          "per_experiment": 2
+        },
+        "summary": "error: bad arguments for nearest_conditions: nearest_conditions() got an unexpected keyword argument 'fraction'"
+      },
+      {
+        "tool": "nearest_conditions",
+        "args": {
+          "habitat": "apollo1",
+          "o2_frac": 1,
+          "pressure_kpa": 115.1,
+          "per_experiment": 2
+        },
+        "summary": "untested, 0 in box, nearest 20.03"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 5,
+      "numbers": [
+        {
+          "value": "1",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "115",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "100",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "20",
+          "cited": [],
+          "source": "nearest_conditions",
+          "ok": true
+        },
+        {
+          "value": "1",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "ok": true
     },
-    "summary": "1 rows"
-   }
-  ],
-  "grounding": {
-   "numbers_checked": 3,
-   "numbers": [
-    {
-     "value": "33.7",
-     "cited": [
-      "PSI-159"
-     ],
-     "source": "sql",
-     "ok": true
+    "answer_truncated": false,
+    "model": "groq:openai/gpt-oss-120b",
+    "models_failed": [],
+    "llm_calls": 3,
+    "usage": {
+      "prompt_tokens": 6845,
+      "completion_tokens": 285
     },
-    {
-     "value": "30",
-     "cited": [
-      "PSI-159"
-     ],
-     "source": "question",
-     "ok": true
-    },
-    {
-     "value": "25",
-     "cited": [
-      "PSI-159"
-     ],
-     "source": "question",
-     "ok": true
-    }
-   ],
-   "unverified": [],
-   "misattributed": [],
-   "ok": true
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1924,
+        "completion_tokens": 59,
+        "est_prompt_tokens": 1801,
+        "latency_s": 0.43,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1986,
+        "completion_tokens": 54,
+        "est_prompt_tokens": 1917,
+        "latency_s": 0.34,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2935,
+        "completion_tokens": 172,
+        "est_prompt_tokens": 2678,
+        "latency_s": 0.79,
+        "finish": "stop"
+      }
+    ],
+    "elapsed_s": 1.65,
+    "cached_at": "2026-11-15 01:13:20",
+    "citations_added": []
   },
-  "answer_truncated": false,
-  "model": "groq:openai/gpt-oss-120b",
-  "models_failed": [],
-  "llm_calls": 2,
-  "usage": {
-   "prompt_tokens": 4129,
-   "completion_tokens": 347
-  },
-  "llm_trace": [
-   {
+  "lunar|what happened to flames in iss tests near the lunar / mars habitat atmosphere": {
+    "question": "What happened to flames in ISS tests near the Lunar / Mars habitat atmosphere?",
+    "habitat": "lunar",
+    "answer": "The nearest ISS tests to a lunar-surface cabin (≈56 kPa, 34 % O₂) fall in a sparsely covered region of the data set. Eleven CFI-G gas-jet tests lie within the ±15 % pressure / ±3 % O₂ box; five of those flames continued burning until the fuel flow was stopped, and four extinguished on their own while fuel was still flowing. The remaining two tests have no recorded outcome. No FLEX droplet tests fall within this envelope, and the closest FLEX result (methanol droplets at 71 kPa, 34 % O₂) showed droplets breaking apart while burning. Thus, under lunar-habitat conditions the ISS experiments show a mix of sustained burning and self-extinction, with no systematic suppression or runaway behavior.  \n\nEvidence: CFI-G tests near the target conditions show 5 “still burning when the fuel flow was stopped” and 4 “went out on its own while fuel was still flowing” out of 11 tests in the box [PSI-159]; FLEX droplet tests do not cover the envelope, the nearest FLEX result broke apart [PSI-69].",
+    "citations": [
+      {
+        "id": "PSI-159",
+        "kind": "investigation",
+        "label": "ACME CFI-G",
+        "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
+        "doi": "10.60555/cyt1-kh64",
+        "url": "https://doi.org/10.60555/cyt1-kh64",
+        "known": true,
+        "verified": true
+      },
+      {
+        "id": "PSI-69",
+        "kind": "investigation",
+        "label": "FLEX",
+        "title": "Flame Extinguishment Experiment",
+        "doi": "10.60555/mbq8-0451",
+        "url": "https://doi.org/10.60555/mbq8-0451",
+        "known": true,
+        "verified": true
+      }
+    ],
+    "citations_added": [],
+    "sql_run": [],
+    "passages": [],
+    "steps": [
+      {
+        "tool": "nearest_conditions",
+        "args": {
+          "habitat": "lunar",
+          "o2_frac": 0.34,
+          "pressure_kpa": 56.5,
+          "per_experiment": 2
+        },
+        "summary": "sparse, 11 in box, nearest 0.69"
+      }
+    ],
+    "grounding": {
+      "numbers_checked": 9,
+      "numbers": [
+        {
+          "value": "56",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "34",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "15",
+          "cited": [],
+          "source": "nearest_conditions",
+          "ok": true
+        },
+        {
+          "value": "3",
+          "cited": [],
+          "source": "nearest_conditions",
+          "ok": true
+        },
+        {
+          "value": "71",
+          "cited": [],
+          "source": "nearest_conditions:PSI-159",
+          "ok": true
+        },
+        {
+          "value": "34",
+          "cited": [],
+          "source": "question",
+          "ok": true
+        },
+        {
+          "value": "5",
+          "cited": [
+            "PSI-159",
+            "PSI-69"
+          ],
+          "source": "nearest_conditions:PSI-159",
+          "ok": true
+        },
+        {
+          "value": "4",
+          "cited": [
+            "PSI-159",
+            "PSI-69"
+          ],
+          "source": "nearest_conditions:PSI-159",
+          "ok": true
+        },
+        {
+          "value": "11",
+          "cited": [
+            "PSI-159",
+            "PSI-69"
+          ],
+          "source": "nearest_conditions:PSI-159",
+          "ok": true
+        }
+      ],
+      "unverified": [],
+      "misattributed": [],
+      "meaning": [],
+      "ok": true
+    },
+    "repaired": false,
+    "answer_truncated": false,
     "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1910,
-    "completion_tokens": 278,
-    "est_prompt_tokens": 1793,
-    "latency_s": 0.98,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 2219,
-    "completion_tokens": 69,
-    "est_prompt_tokens": 2072,
-    "latency_s": 0.74,
-    "finish": "stop"
-   }
-  ],
-  "elapsed_s": 1.74,
-  "cached_at": "2026-11-15 01:12:14",
-  "citations_added": [
-   {
-    "id": "PSI-159",
-    "sentence": "About one-third of the CFI-G flames (33.7 %) kept burning until the fuel flow was stopped when the ambient O₂ fraction w"
-   }
-  ]
- },
- "apollo1|could the test data tell us how the apollo 1 cabin fire would have behaved": {
-  "question": "Could the test data tell us how the Apollo 1 cabin fire would have behaved?",
-  "habitat": "apollo1",
-  "answer": "The nearest ISS combustion tests do not cover the Apollo 1 cabin atmosphere (115 kPa, 100 % O₂). The closest tested conditions are still far away, over 20 units in the combined pressure-O₂ space, and no experiment recorded outcomes at that pure-oxygen pressure. Consequently, the test database cannot directly predict flame spread, burn rate, or extinction behavior for the Apollo 1 fire; any inference would be an extrapolation beyond the measured regime. Historical investigations of the accident describe a rapid, uncontrollable fire in a pure-oxygen environment, but the ISS data alone do not provide quantitative behavior for those conditions. [PSI-159] [NASA:apollo_1]",
-  "citations": [
-   {
-    "id": "PSI-159",
-    "kind": "investigation",
-    "label": "ACME CFI-G",
-    "title": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
-    "doi": "10.60555/cyt1-kh64",
-    "url": "https://doi.org/10.60555/cyt1-kh64",
-    "known": true,
-    "verified": true
-   },
-   {
-    "id": "NASA:apollo_1",
-    "kind": "context",
-    "label": "Apollo 1 fire (1967)",
-    "title": "Apollo 1 fire (1967)",
-    "doi": null,
-    "url": "https://www.nasa.gov/mission/apollo-13/",
-    "known": true,
-    "verified": true
-   }
-  ],
-  "sql_run": [],
-  "passages": [
-   {
-    "chunk_id": "context:apollo_1:0",
-    "source_type": "context",
-    "psi_id": null,
-    "score": 0.7299,
-    "text": "Apollo 1 fire (1967)\ntitle: Apollo 1 - NASA source: https://www.nasa.gov/mission/apollo-1/ fetched: 2026-11-14 Apollo 1 On Jan. 27, 1967, tragedy struck on the launch pad at Cape Kennedy during a preflight test for Apollo 204 (AS-204). The mission was to be the first crewed flight of Apollo, and was scheduled to launch Feb. 21, 1967. Astronauts Virgil Grissom, Edward White and Roger Chaffee lost their lives when a fire swept through the command module. Mission Type Human Space Flight SCHEDULED TO LAUNCH Feb. 21, 1967 The Apollo 1 crew of Virgil I. “Gus” Grissom, left, Edward H. White, and Roge",
-    "experiment": null,
-    "field": "apollo_1",
-    "title": "Apollo 1 fire (1967)",
-    "doi": null,
-    "psi_doi": null,
-    "url": "https://www.nasa.gov/mission/apollo-13/",
-    "pages": null
-   }
-  ],
-  "steps": [
-   {
-    "tool": "nearest_conditions",
-    "args": {
-     "fraction": 1,
-     "habitat": "apollo1",
-     "pressure_kpa": 115.1,
-     "per_experiment": 2
+    "models_failed": [],
+    "llm_calls": 2,
+    "usage": {
+      "prompt_tokens": 4857,
+      "completion_tokens": 365
     },
-    "summary": "error: bad arguments for nearest_conditions: nearest_conditions() got an unexpected keyword argument 'fraction'"
-   },
-   {
-    "tool": "nearest_conditions",
-    "args": {
-     "habitat": "apollo1",
-     "o2_frac": 1,
-     "pressure_kpa": 115.1,
-     "per_experiment": 2
-    },
-    "summary": "untested, 0 in box, nearest 20.03"
-   }
-  ],
-  "grounding": {
-   "numbers_checked": 5,
-   "numbers": [
-    {
-     "value": "1",
-     "cited": [],
-     "source": "question",
-     "ok": true
-    },
-    {
-     "value": "115",
-     "cited": [],
-     "source": "question",
-     "ok": true
-    },
-    {
-     "value": "100",
-     "cited": [],
-     "source": "question",
-     "ok": true
-    },
-    {
-     "value": "20",
-     "cited": [],
-     "source": "nearest_conditions",
-     "ok": true
-    },
-    {
-     "value": "1",
-     "cited": [],
-     "source": "question",
-     "ok": true
-    }
-   ],
-   "unverified": [],
-   "misattributed": [],
-   "ok": true
-  },
-  "answer_truncated": false,
-  "model": "groq:openai/gpt-oss-120b",
-  "models_failed": [],
-  "llm_calls": 3,
-  "usage": {
-   "prompt_tokens": 6845,
-   "completion_tokens": 285
-  },
-  "llm_trace": [
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1924,
-    "completion_tokens": 59,
-    "est_prompt_tokens": 1801,
-    "latency_s": 0.43,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 1986,
-    "completion_tokens": 54,
-    "est_prompt_tokens": 1917,
-    "latency_s": 0.34,
-    "finish": "tool_calls"
-   },
-   {
-    "model": "groq:openai/gpt-oss-120b",
-    "ok": true,
-    "prompt_tokens": 2935,
-    "completion_tokens": 172,
-    "est_prompt_tokens": 2678,
-    "latency_s": 0.79,
-    "finish": "stop"
-   }
-  ],
-  "elapsed_s": 1.65,
-  "cached_at": "2026-11-15 01:13:20",
-  "citations_added": []
- }
+    "llm_trace": [
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 1994,
+        "completion_tokens": 58,
+        "est_prompt_tokens": 1886,
+        "latency_s": 0.69,
+        "finish": "tool_calls"
+      },
+      {
+        "model": "groq:openai/gpt-oss-120b",
+        "ok": true,
+        "prompt_tokens": 2863,
+        "completion_tokens": 307,
+        "est_prompt_tokens": 2577,
+        "latency_s": 1.58,
+        "finish": "stop"
+      }
+    ],
+    "elapsed_s": 2.35,
+    "cached_at": "2026-11-16 18:56:31"
+  }
 }
