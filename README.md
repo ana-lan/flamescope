@@ -2,7 +2,7 @@
 
 # IgnitIQ
 
-**Fire safety for the next space habitat.** IgnitIQ turns 18 ISS combustion experiments into answers: pick a habitat atmosphere, ask a fire safety question, and get an answer computed from real test rows and cited to the NASA investigation behind it.
+**Fire safety for the next space habitat.** IgnitIQ turns 1,999 test rows from 18 ISS combustion experiments into answers: pick a habitat atmosphere, ask a fire safety question, and get an answer computed from real test rows and cited to the NASA investigation behind it.
 
 ![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91)
 ![Challenge: Flame in Freefall](https://img.shields.io/badge/challenge-Flame%20in%20Freefall-F97316)
@@ -29,7 +29,7 @@ Apollo 1 burned in pure oxygen. The habitats NASA is designing for the Moon and 
 ## What it does
 
 - **Mission brief:** pick ISS, Gateway, the lunar/Mars surface habitat, or Apollo 1 as a historical reference. See ranked findings for that atmosphere and a coverage chart of every tested pressure and oxygen level, with the habitat marked. Near the lunar/Mars atmosphere there are 21.6x fewer tests than near ISS conditions.
-- **Experiment explorer:** filter all 1,953 test rows by experiment, outcome, fuel, pressure and oxygen, and open any investigation with its DOI.
+- **Experiment explorer:** filter the 1,953 unique test rows (1,999 minus 46 flagged duplicates) by experiment, outcome, fuel, pressure and oxygen, and open any investigation with its DOI.
 - **Ask IgnitIQ:** a chat that shows its work. Every answer lists the SQL it ran, the passages it read, and a check of every number in it.
 - **Lessons:** Apollo 1, Apollo 13 and the 1997 Mir fire, each linked to the findings that apply and to what the data cannot tell us.
 
